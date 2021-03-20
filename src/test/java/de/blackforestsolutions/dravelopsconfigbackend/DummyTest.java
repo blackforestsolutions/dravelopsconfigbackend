@@ -4,10 +4,10 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class DummyTest{
+public class DummyTest {
 
     @Test
-    void test_dummy(){
+    void test_dummy() {
         double testValue = 0.0d;
         assertThat(0.0d).isEqualTo(testValue);
 

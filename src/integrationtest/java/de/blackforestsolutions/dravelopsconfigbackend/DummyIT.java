@@ -1,13 +1,13 @@
 package de.blackforestsolutions.dravelopsconfigbackend;
 
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class DummyIT{
+public class DummyIT {
 
     @Test
-    void test_dummy(){
+    void test_dummy() {
         double testValue = 0.0d;
         assertThat(0.0d).isEqualTo(testValue);
 
