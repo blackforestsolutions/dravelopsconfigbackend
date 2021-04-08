@@ -4,7 +4,7 @@ import de.blackforestsolutions.dravelopsconfigbackend.model.GraphQLApiConfig;
 import de.blackforestsolutions.dravelopsdatamodel.testutil.TestUtils;
 import org.junit.jupiter.api.Test;
 
-import static de.blackforestsolutions.dravelopsconfigbackend.util.objectmothers.GraphQLApiConfigObjectMother.getGraphQLApiConfig;
+import static de.blackforestsolutions.dravelopsconfigbackend.util.objectmothers.GraphQLApiConfigObjectMother.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class GraphQlApiConfigMapperServiceTest{
@@ -20,7 +20,6 @@ public class GraphQlApiConfigMapperServiceTest{
         GraphQLApiConfig result = classUnderTest.mapYamlToGraphQLApiConfig(configYaml);
 
         //Assert
-        assertThat(result).isEqualToComparingFieldByFieldRecursively(getGraphQLApiConfig());
+        assertThat(result).isEqualToComparingFieldByFieldRecursively(getCorrectGraphQLApiConfig());
     }
-
 }
