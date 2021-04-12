@@ -1,0 +1,63 @@
+graphql:
+  playground:
+    page-title: "Suedbaden-Api"
+    settings:
+      editor:
+        theme: "dark"
+    tabs:
+      - name: "Journey query"
+        query: "classpath:playground/requests/get-journeys-query-max-parameters.graphql"
+        variables:
+          departureLatitude: 48.048381
+          departureLongitude: 8.209198
+          arrivalLatitude: 48.087517
+          arrivalLongitude: 7.891595
+          dateTime: "2021-03-17T13:00:00+02:00"
+          isArrivalDateTime: false
+          language: "de"
+        maxResults: 5
+        departurePlaceholder: "Start"
+        arrivalPlaceholder: "Ziel"
+        maxPastDaysInCalendar: 0
+      - name: "Journey subscription"
+        query: "classpath:playground/requests/get-journeys-subscription-max-parameters.graphql"
+        variables:
+          departureLatitude: 48.048381
+          departureLongitude: 8.209198
+          arrivalLatitude: 48.087517
+          dateTime: "2021-03-17T13:00:00+02:00"
+          isArrivalDateTime: false
+          language: "de"
+        maxResults: 5
+        departurePlaceholder: "Start"
+        arrivalPlaceholder: "Ziel"
+        maxPastDaysInCalendar: 0
+      - name: "Autocomplete addresses query"
+        query: "classpath:playground/requests/get-autocomplete-addresses-query-max-parameters.graphql"
+        variables:
+          language: "de"
+          text: "Freiburg im Breisgau"
+        maxResults: 10
+        layers: "venue, address, street, locality\n"
+      - name: "Nearest addresses query"
+        query: "classpath:playground/requests/get-nearest-addresses-query-max-parameters.graphql"
+        variables:
+          language: "de"
+          longitude: 8.209198
+          latitude: 48.048381
+          radiusInKilometers: 1.0
+        maxResults: 10
+        layers: "venue, address, street, locality\n"
+      - name: "Nearest stations query"
+        query: "classpath:playground/requests/get-nearest-stations-query-max-parameters.graphql"
+        variables:
+          language: "de"
+          longitude: 8.209198
+          latitude: 48.048381
+          radiusInKilometers: 1.0
+        maxResults: 10
+      - name: "Get all stations query"
+        query: "classpath:graphql/get-all-stations-query.graphql"
+      - name: "Get operating area query"
+        query: "classpath:graphql/get-polygon-query.graphql"
+        bufferInMetres: 2000
