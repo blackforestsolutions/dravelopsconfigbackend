@@ -6,8 +6,8 @@ import de.blackforestsolutions.dravelopsconfigbackend.model.Settings;
 public class SettingsObjectMother {
 
     public static Settings getSettingsWithEditor(Editor editor){
-        return Settings.builder()
-                .editor(editor)
-                .build();
+        Settings settings = new Settings();
+        settings.setEditor(editor);
+        return settings;
     }
 }

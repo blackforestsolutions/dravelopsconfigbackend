@@ -7,6 +7,7 @@ import de.blackforestsolutions.dravelopsconfigbackend.service.supportservice.Git
 import de.blackforestsolutions.dravelopsdatamodel.ApiToken;
 import de.blackforestsolutions.dravelopsdatamodel.testutil.TestUtils;
 import org.eclipse.jgit.api.errors.GitAPIException;
+import org.eclipse.jgit.api.errors.TransportException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -19,37 +20,30 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 import static de.blackforestsolutions.dravelopsconfigbackend.util.objectmothers.GraphQLApiConfigObjectMother.getCorrectGraphQLApiConfig;
-import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @Import(ImportApiToken.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 public class GitServiceIT {
 
+    private static final String REPOSITORY_LINK = "https://github.com/Luca1235/TestDeployment";
+    private static final String FILE_PATH = "projects/sbg";
+    private static final String FILE_NAME = "application-sbg.yaml";
+    private static final String USERNAME = "Luca1235";
+    private static final String PASSWORD_TOKEN = "f186e448c9c80c242f4c7ddd8e10182196c8a261";
+
     @Autowired
     private GitService gitService;
-
     @Autowired
     private FileMapperService fileMapperService;
-
     @Autowired
     private GitCallBuilderService gitCallBuilderService;
-
     @Autowired
     private ApiToken correctApiToken;
-
     @Autowired
     private ApiToken incorrectApiToken;
-
-
-    private final String REPOSITORY_NAME = "TestDeployment";
-    private final String REPOSITORY_LINK = "https://github.com/Luca1235/" + REPOSITORY_NAME;
-    private final String FILE_PATH = "projects/sbg";
-    private final String FILE_NAME = "application-sbg.yaml";
-    private final String USERNAME = "Luca1235";
-    private final String PASSWORD_TOKEN = "f186e448c9c80c242f4c7ddd8e10182196c8a261";
-
 
     @Test
     void test_does_git_call_builder_work() {
@@ -125,7 +119,7 @@ public class GitServiceIT {
 
 
     @Test
-    void test_pull_from_git_hub_with_correct_api_token_setup_are_the_same() throws GitAPIException, IOException {
+    void test_pull_from_git_hub_with_correct_api_token_files_are_the_same() throws GitAPIException, IOException {
         //Arrange
         File jsonFile = TestUtils.getResourceAsFile("test.files/application-sbg-test.json", "");
         //Access
@@ -136,7 +130,7 @@ public class GitServiceIT {
     }
 
     @Test
-    void test_pull_from_git_hub_with_incorrect_api_token_setup_are_not_the_same() throws GitAPIException, IOException {
+    void test_pull_from_git_hub_with_correct_api_token_files_are_not_the_same() throws GitAPIException, IOException {
         //Arrange
         File jsonFile = TestUtils.getResourceAsFile("test.files/application-sbg-test-wrong.json", "");
         //Access
@@ -146,5 +140,10 @@ public class GitServiceIT {
                 .isNotEqualToIgnoringWhitespace(Files.readString(Path.of(fetchedFile.getPath())));
     }
 
+    @Test
+    void test_pull_from_git_hub_with_incorrect_api_token_password_throws_exception() {
+        //Assert
+        assertThrows(TransportException.class, () -> gitService.pullFileFromGitWith(incorrectApiToken));
+    }
 
 }

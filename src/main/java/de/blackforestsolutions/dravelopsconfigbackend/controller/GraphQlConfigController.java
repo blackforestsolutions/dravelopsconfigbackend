@@ -1,5 +1,5 @@
 package de.blackforestsolutions.dravelopsconfigbackend.controller;
 
-public class GraphQlConfigController{
+public class GraphQlConfigController {
 
 }

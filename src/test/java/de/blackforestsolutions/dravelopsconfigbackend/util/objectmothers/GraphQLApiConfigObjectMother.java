@@ -9,8 +9,8 @@ public class GraphQLApiConfigObjectMother {
 
 
     public static GraphQLApiConfig getCorrectGraphQLApiConfig(){
-        return GraphQLApiConfig.builder()
-                .graphql(getGraphQlWithGivenPlayground(getPlaygroundForSuedbadenApi()))
-                .build();
+        GraphQLApiConfig config = new GraphQLApiConfig();
+        config.setGraphql(getGraphQlWithGivenPlayground(getPlaygroundForSuedbadenApi()));
+        return config;
     }
 }

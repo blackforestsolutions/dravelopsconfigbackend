@@ -2,17 +2,11 @@
 package de.blackforestsolutions.dravelopsconfigbackend.model;
 
 import com.fasterxml.jackson.annotation.*;
-import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
-import lombok.*;
-import lombok.experimental.Accessors;
 
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
     "playground"

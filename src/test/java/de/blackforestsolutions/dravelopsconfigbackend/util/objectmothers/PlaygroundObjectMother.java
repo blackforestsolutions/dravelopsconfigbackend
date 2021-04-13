@@ -30,10 +30,10 @@ public class PlaygroundObjectMother{
         tabList.add(getTabGetAllStationsQueryWithoutVariables());
         tabList.add(getTabGetOperatingAreaQuery());
 
-        return Playground.builder()
-                .pageTitle("Suedbaden-Api")
-                .settings(settings)
-                .tabs(tabList)
-                .build();
+        Playground playground = new Playground();
+        playground.setPageTitle("Suedbaden-Api");
+        playground.setSettings(settings);
+        playground.setTabs(tabList);
+        return playground;
     }
 }

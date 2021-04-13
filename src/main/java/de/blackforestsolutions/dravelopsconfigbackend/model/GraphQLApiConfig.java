@@ -2,17 +2,11 @@
 package de.blackforestsolutions.dravelopsconfigbackend.model;
 
 import com.fasterxml.jackson.annotation.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
     "graphql"

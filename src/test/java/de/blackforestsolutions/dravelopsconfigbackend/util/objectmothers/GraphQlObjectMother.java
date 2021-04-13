@@ -6,8 +6,8 @@ import de.blackforestsolutions.dravelopsconfigbackend.model.Playground;
 public class GraphQlObjectMother {
 
     public static Graphql getGraphQlWithGivenPlayground(Playground playground){
-        return Graphql.builder()
-                .playground(playground)
-                .build();
+        Graphql graphql = new Graphql();
+        graphql.setPlayground(playground);
+        return graphql;
     }
 }
