@@ -9,17 +9,17 @@ import java.util.Map;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
-    "name",
-    "query",
-    "variables",
-    "maxResults",
-    "departurePlaceholder",
-    "arrivalPlaceholder",
-    "maxPastDaysInCalendar",
-    "layers",
-    "bufferInMetres"
+        "name",
+        "query",
+        "variables",
+        "maxResults",
+        "departurePlaceholder",
+        "arrivalPlaceholder",
+        "maxPastDaysInCalendar",
+        "layers",
+        "bufferInMetres"
 })
-public class Tab implements Serializable {
+public class Tab implements Serializable{
 
     @JsonProperty("name")
     private String name;
@@ -41,7 +41,7 @@ public class Tab implements Serializable {
     private Long bufferInMetres;
     @JsonIgnore
     private final Map<String, Object> additionalProperties = new HashMap<>();
-    private final static long serialVersionUID = -5534681326926075973L;
+    private final static long serialVersionUID = - 5534681326926075973L;
 
     @JsonProperty("name")
     public String getName() {

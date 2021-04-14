@@ -9,19 +9,19 @@ import java.util.Map;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
-    "departureLatitude",
-    "departureLongitude",
-    "arrivalLatitude",
-    "arrivalLongitude",
-    "dateTime",
-    "isArrivalDateTime",
-    "language",
-    "text",
-    "longitude",
-    "latitude",
-    "radiusInKilometers"
+        "departureLatitude",
+        "departureLongitude",
+        "arrivalLatitude",
+        "arrivalLongitude",
+        "dateTime",
+        "isArrivalDateTime",
+        "language",
+        "text",
+        "longitude",
+        "latitude",
+        "radiusInKilometers"
 })
-public class Variables implements Serializable {
+public class Variables implements Serializable{
 
     @JsonProperty("departureLatitude")
     private Double departureLatitude;
@@ -47,7 +47,7 @@ public class Variables implements Serializable {
     private Double radiusInKilometers;
     @JsonIgnore
     private final Map<String, Object> additionalProperties = new HashMap<>();
-    private final static long serialVersionUID = -1841458124451723067L;
+    private final static long serialVersionUID = - 1841458124451723067L;
 
     @JsonProperty("departureLatitude")
     public Double getDepartureLatitude() {

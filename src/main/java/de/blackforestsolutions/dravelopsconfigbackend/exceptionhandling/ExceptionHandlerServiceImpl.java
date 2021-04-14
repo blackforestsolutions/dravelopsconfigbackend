@@ -8,30 +8,30 @@ import reactor.core.publisher.Mono;
 import java.util.Optional;
 
 @Slf4j
-public class ExceptionHandlerServiceImpl implements ExceptionHandlerService {
+public class ExceptionHandlerServiceImpl implements ExceptionHandlerService{
 
     @Override
     public <T> Mono<T> handleExceptions(CallStatus<T> callStatus) {
-        if (Optional.ofNullable(callStatus).isEmpty()) {
+        if(Optional.ofNullable(callStatus).isEmpty()) {
             logMissingCallStatus();
             return Mono.empty();
         }
-        if (Optional.ofNullable(callStatus.getThrowable()).isPresent()) {
+        if(Optional.ofNullable(callStatus.getThrowable()).isPresent()) {
             logError(callStatus);
             return Mono.empty();
         }
-        if (Optional.ofNullable(callStatus.getStatus()).isEmpty()) {
+        if(Optional.ofNullable(callStatus.getStatus()).isEmpty()) {
             logMissingStatus();
             return Mono.empty();
         }
-        if (callStatus.getStatus().equals(Status.FAILED)) {
+        if(callStatus.getStatus().equals(Status.FAILED)) {
             logMissingCallStatusException();
             return Mono.empty();
         }
-        if (Optional.ofNullable(callStatus.getCalledObject()).isPresent()) {
+        if(Optional.ofNullable(callStatus.getCalledObject()).isPresent()) {
             return Mono.just(callStatus.getCalledObject());
         }
-        if (callStatus.getStatus().equals(Status.SUCCESS)) {
+        if(callStatus.getStatus().equals(Status.SUCCESS)) {
             logMissingCalledObject();
             return Mono.empty();
         }

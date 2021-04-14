@@ -4,17 +4,17 @@ import de.blackforestsolutions.dravelopsconfigbackend.model.Variables;
 
 /**
  * Possible Fields:
- "departureLatitude",
- "departureLongitude",
- "arrivalLatitude",
- "arrivalLongitude",
- "dateTime",
- "isArrivalDateTime",
- "language",
- "text",
- "longitude",
- "latitude",
- "radiusInKilometers"
+ * "departureLatitude",
+ * "departureLongitude",
+ * "arrivalLatitude",
+ * "arrivalLongitude",
+ * "dateTime",
+ * "isArrivalDateTime",
+ * "language",
+ * "text",
+ * "longitude",
+ * "latitude",
+ * "radiusInKilometers"
  */
 public class VariablesObjectMother{
 
@@ -24,7 +24,7 @@ public class VariablesObjectMother{
     private static final double DEFAULT_ARRIVAL_LATITUDE = 48.087517d;
     private static final String DEFAULT_LANGUAGE = "de";
 
-    public static Variables getVariablesWithAllInformation(){
+    public static Variables getVariablesWithAllInformation() {
         Variables variables = new Variables();
         variables.setDepartureLatitude(DEFAULT_LATITUDE);
         variables.setDepartureLongitude(DEFAULT_LONGITUDE);
@@ -36,7 +36,7 @@ public class VariablesObjectMother{
         return variables;
     }
 
-    public static Variables getVariablesWithoutArrivalLongitude(){
+    public static Variables getVariablesWithoutArrivalLongitude() {
         Variables variables = new Variables();
         variables.setDepartureLatitude(DEFAULT_LATITUDE);
         variables.setDepartureLongitude(DEFAULT_LONGITUDE);
@@ -47,14 +47,14 @@ public class VariablesObjectMother{
         return variables;
     }
 
-    public static Variables getVariablesWithLanguageAndText(){
+    public static Variables getVariablesWithLanguageAndText() {
         Variables variables = new Variables();
         variables.setLanguage(DEFAULT_LANGUAGE);
         variables.setText("Freiburg im Breisgau");
         return variables;
     }
 
-    public static Variables getVariablesWithLanguageLongitudeLatitudeRadius(){
+    public static Variables getVariablesWithLanguageLongitudeLatitudeRadius() {
         Variables variables = new Variables();
         variables.setLanguage(DEFAULT_LANGUAGE);
         variables.setLatitude(DEFAULT_LATITUDE);

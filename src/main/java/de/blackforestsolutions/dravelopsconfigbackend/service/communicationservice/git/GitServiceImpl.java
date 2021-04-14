@@ -11,6 +11,8 @@ import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.ObjectLoader;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
+import org.eclipse.jgit.transport.PushResult;
+import org.eclipse.jgit.transport.RemoteRefUpdate;
 import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 import org.eclipse.jgit.treewalk.TreeWalk;
 import org.eclipse.jgit.treewalk.filter.PathFilter;
@@ -22,10 +24,13 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.time.LocalDateTime;
+import java.util.function.Predicate;
+import java.util.stream.StreamSupport;
 
 @Service
-public class GitServiceImpl implements GitService {
+public class GitServiceImpl implements GitService{
 
     private static final String TEMPORARY_FOLDER_NAME = "TempConfigBackendFolder";
 
@@ -33,27 +38,34 @@ public class GitServiceImpl implements GitService {
     private final GitCallBuilderService gitCallBuilderService;
 
     @Autowired
-    public GitServiceImpl(FileMapperService fileMapperService, GitCallBuilderService gitCallBuilderService){
+    public GitServiceImpl(FileMapperService fileMapperService, GitCallBuilderService gitCallBuilderService) {
         this.fileMapperService = fileMapperService;
         this.gitCallBuilderService = gitCallBuilderService;
     }
 
     @Override
     public File pullFileFromGitWith(ApiToken apiToken) throws IOException, GitAPIException {
-        File tempRepositoryDirectory = createTempFile();
-        Git git = cloneRemoteGitRepository(tempRepositoryDirectory, apiToken);
+        File tempDirectory = createTempDirectory();
+        System.out.println("TEMP PATH: " + tempDirectory.getPath());
+        Git git = cloneRemoteGitRepository(tempDirectory, apiToken);
         String jsonContent = createObjectsFromLatestCommit(git.getRepository(), apiToken);
         git.getRepository().close();
-
+        if(tempDirectory.exists()) {
+            deleteAllFilesOfDirectory(tempDirectory);
+        }
         return getFileFromByteStream(apiToken, jsonContent.getBytes(StandardCharsets.UTF_8));
     }
 
     @Override
-    public void pushFileToGitWith(File file, ApiToken apiToken) throws IOException, GitAPIException {
-        File tempDirectory = createTempFile();
+    public boolean pushFileToGitWith(File file, ApiToken apiToken) throws IOException, GitAPIException {
+        File tempDirectory = createTempDirectory();
         Git git = cloneRemoteGitRepository(tempDirectory, apiToken);
-        pushRepositoryToGitHub(git, tempDirectory, file, apiToken);
+        boolean wasSuccessful = pushRepositoryToGitHub(git, tempDirectory, file, apiToken);
         git.getRepository().close();
+        if(tempDirectory.exists()) {
+            deleteAllFilesOfDirectory(tempDirectory);
+        }
+        return wasSuccessful;
     }
 
 
@@ -75,7 +87,7 @@ public class GitServiceImpl implements GitService {
         treeWalk.setRecursive(true);
         treeWalk.setFilter(PathFilter.create(gitCallBuilderService.buildFileSubPathInGitWith(apiToken)));
 
-        if(!treeWalk.next()) {
+        if(! treeWalk.next()) {
             throw new IllegalStateException("Exception in TreeWalk");
         }
 
@@ -83,7 +95,7 @@ public class GitServiceImpl implements GitService {
     }
 
 
-    private void pushRepositoryToGitHub(Git git, File tempDirectory, File jsonFile, ApiToken apiToken) throws IOException, GitAPIException {
+    private boolean pushRepositoryToGitHub(Git git, File tempDirectory, File jsonFile, ApiToken apiToken) throws IOException, GitAPIException {
         File yamlFile = new File(tempDirectory, apiToken.getPath());
         if(yamlFile.exists() || yamlFile.mkdirs()) {
             PrintWriter writer = new PrintWriter(new File(yamlFile, apiToken.getFilename()));
@@ -92,8 +104,19 @@ public class GitServiceImpl implements GitService {
 
             git.add().addFilepattern(".").call();
             git.commit().setMessage("Backend Update " + LocalDateTime.now()).call();
-            git.push().setCredentialsProvider(new UsernamePasswordCredentialsProvider(apiToken.getUsername(), apiToken.getPassword())).call();
+
+            UsernamePasswordCredentialsProvider credentialsProvider =
+                    new UsernamePasswordCredentialsProvider(apiToken.getUsername(), apiToken.getPassword());
+
+            return wasUpdateSuccessful(git.push().setCredentialsProvider(credentialsProvider).call());
         }
+        return false;
+    }
+
+    private boolean wasUpdateSuccessful(Iterable<PushResult> pushResults) {
+        Predicate<RemoteRefUpdate> isStatusOK = update -> update.getStatus().equals(RemoteRefUpdate.Status.OK);
+        Predicate<PushResult> isPushResultStatusOK = pushResult -> pushResult.getRemoteUpdates().stream().allMatch(isStatusOK);
+        return StreamSupport.stream(pushResults.spliterator(), false).allMatch(isPushResultStatusOK);
     }
 
 
@@ -106,16 +129,28 @@ public class GitServiceImpl implements GitService {
     }
 
 
-    private File createTempFile() throws IOException {
-        File tempFile = File.createTempFile(TEMPORARY_FOLDER_NAME, "");
-        Files.deleteIfExists(tempFile.toPath());
-        return tempFile;
+    private File createTempDirectory() throws IOException {
+        Path tempPath = Files.createTempDirectory(TEMPORARY_FOLDER_NAME);
+        Files.deleteIfExists(tempPath);
+        return tempPath.toFile();
     }
 
-
     private File getFileFromByteStream(ApiToken apiToken, byte[] byteStream) throws IOException {
-        File jsonFile = new File(apiToken.getFilename());
+        File jsonFile = new File(apiToken.getFilename().substring(0, apiToken.getFilename().length() - 4) + "json");
         FileUtils.writeByteArrayToFile(jsonFile, byteStream);
         return jsonFile;
+    }
+
+    private void deleteAllFilesOfDirectory(File file) {
+        if(file != null) {
+            File[] files = file.listFiles();
+            if(files != null) {
+                for(File childFile : files) {
+                    if(childFile.isDirectory()) deleteAllFilesOfDirectory(childFile);
+                    else childFile.deleteOnExit();
+                }
+            }
+            file.deleteOnExit();
+        }
     }
 }

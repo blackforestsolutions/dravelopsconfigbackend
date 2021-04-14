@@ -10,9 +10,9 @@ import java.util.Map;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
-    "theme"
+        "theme"
 })
-public class Editor implements Serializable {
+public class Editor implements Serializable{
 
     @JsonProperty("theme")
     private String theme;

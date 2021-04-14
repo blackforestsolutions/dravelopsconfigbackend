@@ -9,7 +9,7 @@ import java.util.Objects;
 public class GitCallBuilderServiceImpl implements GitCallBuilderService{
 
     @Override
-    public String buildGitUrlWith(ApiToken apiToken){
+    public String buildGitUrlWith(ApiToken apiToken) {
         Objects.requireNonNull(apiToken.getPath(), "path is not allowed to be null");
         Objects.requireNonNull(apiToken.getRepository(), "repository is not allowed to be null");
         Objects.requireNonNull(apiToken.getFilename(), "filename is not allowed to be null");

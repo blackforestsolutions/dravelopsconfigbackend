@@ -9,15 +9,15 @@ import java.util.Map;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
-    "graphql"
+        "graphql"
 })
-public class GraphQLApiConfig implements Serializable {
+public class GraphQLApiConfig implements Serializable{
 
     @JsonProperty("graphql")
     private Graphql graphql;
     @JsonIgnore
     private final Map<String, Object> additionalProperties = new HashMap<>();
-    private final static long serialVersionUID = -8595616181418124189L;
+    private final static long serialVersionUID = - 8595616181418124189L;
 
     @JsonProperty("graphql")
     public Graphql getGraphql() {

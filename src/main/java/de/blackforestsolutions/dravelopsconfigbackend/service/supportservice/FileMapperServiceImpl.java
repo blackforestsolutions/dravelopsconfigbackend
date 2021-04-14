@@ -14,7 +14,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 @Service
-public class FileMapperServiceImpl implements FileMapperService {
+public class FileMapperServiceImpl implements FileMapperService{
 
     @Override
     public <T> T mapYamlWith(File file, Class<T> returnType) throws IOException {

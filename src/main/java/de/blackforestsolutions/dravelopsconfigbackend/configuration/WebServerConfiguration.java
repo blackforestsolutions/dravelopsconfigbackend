@@ -7,14 +7,13 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
 
 @SpringBootConfiguration
-public class WebServerConfiguration {
+public class WebServerConfiguration{
 
     @Bean
     @Primary
-    public ObjectMapper objectMapper(){
+    public ObjectMapper objectMapper() {
         return new DravelOpsJsonMapper();
     }
-
 
 
 }

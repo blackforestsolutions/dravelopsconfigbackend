@@ -22,11 +22,12 @@ import java.nio.file.Path;
 import static de.blackforestsolutions.dravelopsconfigbackend.util.objectmothers.GraphQLApiConfigObjectMother.getCorrectGraphQLApiConfig;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @Import(ImportApiToken.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
-public class GitServiceIT {
+public class GitServiceIT{
 
     private static final String REPOSITORY_LINK = "https://github.com/Luca1235/TestDeployment";
     private static final String FILE_PATH = "projects/sbg";
@@ -57,7 +58,6 @@ public class GitServiceIT {
     }
 
 
-
     @Test
     void test_mapYamlToGraphQLApiConfig_with_test_yaml_file_returns_correctly_mapped_GraphQlApiConfig_object() throws IOException {
         //Arrange
@@ -79,13 +79,12 @@ public class GitServiceIT {
     }
 
     @Test
-    void test_mapYamlToGraphQLApiConfig_with_null_test_yaml_file_returns_exception(){
+    void test_mapYamlToGraphQLApiConfig_with_null_test_yaml_file_returns_exception() {
         //Arrange
         File yamlFile = null;
         //Access Assert
         assertThrows(NullPointerException.class, () -> fileMapperService.mapYamlWith(yamlFile, GraphQLApiConfig.class));
     }
-
 
 
     @Test
@@ -109,13 +108,12 @@ public class GitServiceIT {
     }
 
     @Test
-    void test_mapJsonToGraphQLApiConfig_with_null_test_json_file_returns_exception(){
+    void test_mapJsonToGraphQLApiConfig_with_null_test_json_file_returns_exception() {
         //Arrange
         File jsonFile = null;
         //Access|Assert
         assertThrows(NullPointerException.class, () -> fileMapperService.mapJsonWith(jsonFile, GraphQLApiConfig.class));
     }
-
 
 
     @Test
@@ -146,4 +144,15 @@ public class GitServiceIT {
         assertThrows(TransportException.class, () -> gitService.pullFileFromGitWith(incorrectApiToken));
     }
 
+    @Test
+    void test_push_update_to_github_with_correct_api_token() throws GitAPIException, IOException {
+        File jsonFile = TestUtils.getResourceAsFile("test.files/application-sbg-test-update.json", "");
+        assertTrue(gitService.pushFileToGitWith(jsonFile, correctApiToken));
+    }
+
+    @Test
+    void test_push_update_to_github_with_incorrect_api_token_password() throws GitAPIException, IOException {
+        File jsonFile = TestUtils.getResourceAsFile("test.files/application-sbg-test-update.json", "");
+        assertThrows(TransportException.class, () -> gitService.pushFileToGitWith(jsonFile, incorrectApiToken));
+    }
 }

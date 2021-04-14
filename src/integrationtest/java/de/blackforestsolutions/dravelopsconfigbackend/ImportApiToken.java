@@ -1,14 +1,12 @@
 package de.blackforestsolutions.dravelopsconfigbackend;
 
 import de.blackforestsolutions.dravelopsdatamodel.ApiToken;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.PropertySource;
 
 @TestConfiguration
-public class ImportApiToken {
+public class ImportApiToken{
 
     private final String REPOSITORY_NAME = "TestDeployment";
     private final String REPOSITORY_LINK = "https://github.com/Luca1235/" + REPOSITORY_NAME;

@@ -10,11 +10,11 @@ import java.util.Map;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
-    "page-title",
-    "settings",
-    "tabs"
+        "page-title",
+        "settings",
+        "tabs"
 })
-public class Playground implements Serializable {
+public class Playground implements Serializable{
 
     @JsonProperty("page-title")
     private String pageTitle;
@@ -24,7 +24,7 @@ public class Playground implements Serializable {
     private List<Tab> tabs = null;
     @JsonIgnore
     private final Map<String, Object> additionalProperties = new HashMap<>();
-    private final static long serialVersionUID = -6657780933993216193L;
+    private final static long serialVersionUID = - 6657780933993216193L;
 
     @JsonProperty("page-title")
     public String getPageTitle() {

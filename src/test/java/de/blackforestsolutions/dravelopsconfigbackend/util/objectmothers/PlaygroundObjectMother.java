@@ -6,18 +6,17 @@ import de.blackforestsolutions.dravelopsconfigbackend.model.Settings;
 import de.blackforestsolutions.dravelopsconfigbackend.model.Tab;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-import static de.blackforestsolutions.dravelopsconfigbackend.util.objectmothers.EditorObjectMother.*;
-import static de.blackforestsolutions.dravelopsconfigbackend.util.objectmothers.SettingsObjectMother.*;
+import static de.blackforestsolutions.dravelopsconfigbackend.util.objectmothers.EditorObjectMother.getEditorLightTheme;
+import static de.blackforestsolutions.dravelopsconfigbackend.util.objectmothers.SettingsObjectMother.getSettingsWithEditor;
 import static de.blackforestsolutions.dravelopsconfigbackend.util.objectmothers.TabObjectMother.*;
 import static de.blackforestsolutions.dravelopsconfigbackend.util.objectmothers.VariablesObjectMother.*;
 
 public class PlaygroundObjectMother{
 
 
-    public static Playground getPlaygroundForSuedbadenApi(){
+    public static Playground getPlaygroundForSuedbadenApi() {
         Editor editor = getEditorLightTheme();
         Settings settings = getSettingsWithEditor(editor);
 
