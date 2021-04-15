@@ -1,8 +1,7 @@
 package de.blackforestsolutions.dravelopsconfigbackend.service.communicationservice.git;
 
-import de.blackforestsolutions.dravelopsconfigbackend.model.GraphQLApiConfig;
-import de.blackforestsolutions.dravelopsconfigbackend.service.supportservice.FileMapperService;
-import de.blackforestsolutions.dravelopsconfigbackend.service.supportservice.GitCallBuilderService;
+import de.blackforestsolutions.dravelopsconfigbackend.exceptionhandling.RevCommitFetchingException;
+import de.blackforestsolutions.dravelopsconfigbackend.exceptionhandling.TreeWalkException;
 import de.blackforestsolutions.dravelopsdatamodel.ApiToken;
 import org.apache.commons.io.FileUtils;
 import org.eclipse.jgit.api.Git;
@@ -16,13 +15,10 @@ import org.eclipse.jgit.transport.RemoteRefUpdate;
 import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 import org.eclipse.jgit.treewalk.TreeWalk;
 import org.eclipse.jgit.treewalk.filter.PathFilter;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDateTime;
@@ -37,15 +33,12 @@ import java.util.stream.StreamSupport;
 public class GitServiceImpl implements GitService{
 
     private static final String TEMPORARY_FOLDER_NAME = "TempConfigBackendFolder";
-
-    private final FileMapperService fileMapperService;
-    private final GitCallBuilderService gitCallBuilderService;
-
-    @Autowired
-    public GitServiceImpl(FileMapperService fileMapperService, GitCallBuilderService gitCallBuilderService) {
-        this.fileMapperService = fileMapperService;
-        this.gitCallBuilderService = gitCallBuilderService;
-    }
+    private static final String BACKEND_UPDATE = "Backend Update ";
+    private static final boolean IS_RECURSIVE_GIT_DIRECTORY_SEARCH = true;
+    private static final int POSITION_OF_FIRST_OBJECT_ID = 0;
+    private static final int MAX_AMOUNT_OF_FETCHED_REV_COMMITS = 1;
+    private static final String CONSIDER_ALL_FILES_FILEPATTERN = ".";
+    private static final boolean IS_SEQUENTIAL_STREAM = true;
 
     @Override
     public File pullFileFromGitWith(ApiToken apiToken) throws IOException, GitAPIException {
@@ -72,6 +65,7 @@ public class GitServiceImpl implements GitService{
         List<RemoteRefUpdate.Status> updateStatusList = pushRepositoryToGitHub(git, apiToken);
 
         git.getRepository().close();
+
         if(tempDirectory.exists()) {
             deleteAllFilesOfDirectory(tempDirectory);
         }
@@ -92,6 +86,19 @@ public class GitServiceImpl implements GitService{
                 .next());
 
         return walkThroughLatestCommit(repository, apiToken, latestCommit).getObjectId(POSITION_OF_FIRST_OBJECT_ID);
+    }
+
+    private TreeWalk walkThroughLatestCommit(Repository repository, ApiToken apiToken, Optional<RevCommit> latestCommit) throws IOException {
+        TreeWalk treeWalk = new TreeWalk(repository);
+        treeWalk.addTree(latestCommit.orElseThrow(RevCommitFetchingException::new).getTree());
+        treeWalk.setRecursive(IS_RECURSIVE_GIT_DIRECTORY_SEARCH);
+        treeWalk.setFilter(PathFilter.create(apiToken.getPath()));
+
+        if(! treeWalk.next()) {
+            throw new TreeWalkException();
+        }
+
+        return treeWalk;
     }
 
     private List<RemoteRefUpdate.Status> pushRepositoryToGitHub(Git git, ApiToken apiToken) throws GitAPIException {
@@ -127,14 +134,14 @@ public class GitServiceImpl implements GitService{
         return tempPath.toFile();
     }
 
-    private File getFileFromByteStream(ApiToken apiToken, byte[] byteStream) throws IOException {
-        File jsonFile = new File(apiToken.getFilename().substring(0, apiToken.getFilename().length() - 4) + "json");
-        FileUtils.writeByteArrayToFile(jsonFile, byteStream);
-        return jsonFile;
+    private File createFileFromByteStream(File tempDirectory, ApiToken apiToken, byte[] byteStream) throws IOException {
+        File file = new File(tempDirectory.getPath(), apiToken.getFilename());
+        FileUtils.writeByteArrayToFile(file, byteStream);
+        return file;
     }
 
     private void deleteAllFilesOfDirectory(File file) {
-        if(file != null) {
+        if(Optional.ofNullable(file).isPresent()) {
             File[] files = file.listFiles();
             if(Optional.ofNullable(files).isPresent()) {
                 for(File childFile : files) {
