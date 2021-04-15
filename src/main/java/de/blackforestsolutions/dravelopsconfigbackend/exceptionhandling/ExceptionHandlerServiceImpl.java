@@ -3,10 +3,12 @@ package de.blackforestsolutions.dravelopsconfigbackend.exceptionhandling;
 import de.blackforestsolutions.dravelopsdatamodel.CallStatus;
 import de.blackforestsolutions.dravelopsdatamodel.Status;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
 import java.util.Optional;
 
+@Service
 @Slf4j
 public class ExceptionHandlerServiceImpl implements ExceptionHandlerService{
 

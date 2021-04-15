@@ -8,6 +8,7 @@ import de.blackforestsolutions.dravelopsdatamodel.ApiToken;
 import de.blackforestsolutions.dravelopsdatamodel.testutil.TestUtils;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.api.errors.TransportException;
+import org.eclipse.jgit.transport.RemoteRefUpdate;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -147,7 +148,7 @@ public class GitServiceIT{
     @Test
     void test_push_update_to_github_with_correct_api_token() throws GitAPIException, IOException {
         File jsonFile = TestUtils.getResourceAsFile("test.files/application-sbg-test-update.json", "");
-        assertTrue(gitService.pushFileToGitWith(jsonFile, correctApiToken));
+        assertTrue(gitService.pushFileToGitWith(jsonFile, correctApiToken).stream().allMatch(status -> status.equals(RemoteRefUpdate.Status.OK)));
     }
 
     @Test

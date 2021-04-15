@@ -2,9 +2,11 @@ package de.blackforestsolutions.dravelopsconfigbackend.service.communicationserv
 
 import de.blackforestsolutions.dravelopsdatamodel.ApiToken;
 import org.eclipse.jgit.api.errors.GitAPIException;
+import org.eclipse.jgit.transport.RemoteRefUpdate;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 public interface GitService{
 
@@ -16,6 +18,6 @@ public interface GitService{
      */
     File pullFileFromGitWith(ApiToken apiToken) throws IOException, GitAPIException;
 
-    boolean pushFileToGitWith(File file, ApiToken apiToken) throws IOException, GitAPIException;
+    List<RemoteRefUpdate.Status> pushFileToGitWith(File file, ApiToken apiToken) throws IOException, GitAPIException;
 
 }

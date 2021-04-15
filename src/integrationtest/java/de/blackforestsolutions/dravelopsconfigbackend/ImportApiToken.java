@@ -10,12 +10,13 @@ public class ImportApiToken{
 
     private final String REPOSITORY_NAME = "TestDeployment";
     private final String REPOSITORY_LINK = "https://github.com/Luca1235/" + REPOSITORY_NAME;
-    private final String FILE_PATH = "projects/sbg";
+    private final String FILE_PATH = "projects";
     private final String FILE_NAME = "application-sbg.yaml";
 
     private final String USERNAME = "Luca1235";
     private final String PASSWORD_TOKEN = "f186e448c9c80c242f4c7ddd8e10182196c8a261";
     private final String INCORRECT_PASSWORD_TOKEN = "4815162342";
+
 
     @Bean
     @ConfigurationProperties(prefix = "correct")

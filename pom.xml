@@ -20,7 +20,7 @@
         <spring-cloud.version>Hoxton.SR7</spring-cloud.version>
         <apache.lang-version>2.6</apache.lang-version>
         <lombok.version>1.18.8</lombok.version>
-        <blackforestsolutions.dravelopsdatamodel.version>14.1.0</blackforestsolutions.dravelopsdatamodel.version>
+        <blackforestsolutions.dravelopsdatamodel.version>14.2.0</blackforestsolutions.dravelopsdatamodel.version>
         <jgit.version>5.11.0.202103091610-r</jgit.version>
         <jackson.version>2.12.2</jackson.version>
         <!-- Maven test Dependencies -->

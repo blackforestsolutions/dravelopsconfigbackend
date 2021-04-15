@@ -7,4 +7,6 @@ public interface GitCallBuilderService{
     String buildGitUrlWith(ApiToken apiToken);
 
     String buildFileSubPathInGitWith(ApiToken apiToken);
+
+    String buildFileName(ApiToken apiToken);
 }

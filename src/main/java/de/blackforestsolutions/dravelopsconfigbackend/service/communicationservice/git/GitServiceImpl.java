@@ -26,7 +26,11 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDateTime;
-import java.util.function.Predicate;
+import java.util.List;
+import java.util.Optional;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 @Service
@@ -45,80 +49,69 @@ public class GitServiceImpl implements GitService{
 
     @Override
     public File pullFileFromGitWith(ApiToken apiToken) throws IOException, GitAPIException {
-        File tempDirectory = createTempDirectory();
-        System.out.println("TEMP PATH: " + tempDirectory.getPath());
+        File tempDirectory = createTempDirectory(apiToken);
         Git git = cloneRemoteGitRepository(tempDirectory, apiToken);
-        String jsonContent = createObjectsFromLatestCommit(git.getRepository(), apiToken);
+
+        ObjectLoader objectLoader = createObjectLoaderOfLatestCommit(git.getRepository(), apiToken);
+        File returnFile = createFileFromByteStream(tempDirectory, apiToken, objectLoader.getBytes());
+
         git.getRepository().close();
         if(tempDirectory.exists()) {
             deleteAllFilesOfDirectory(tempDirectory);
         }
-        return getFileFromByteStream(apiToken, jsonContent.getBytes(StandardCharsets.UTF_8));
+        return returnFile;
     }
 
     @Override
-    public boolean pushFileToGitWith(File file, ApiToken apiToken) throws IOException, GitAPIException {
-        File tempDirectory = createTempDirectory();
+    public List<RemoteRefUpdate.Status> pushFileToGitWith(File file, ApiToken apiToken) throws IOException, GitAPIException {
+        File tempDirectory = createTempDirectory(apiToken);
         Git git = cloneRemoteGitRepository(tempDirectory, apiToken);
-        boolean wasSuccessful = pushRepositoryToGitHub(git, tempDirectory, file, apiToken);
+
+        FileUtils.copyFile(file, tempDirectory);
+
+        List<RemoteRefUpdate.Status> updateStatusList = pushRepositoryToGitHub(git, apiToken);
+
         git.getRepository().close();
         if(tempDirectory.exists()) {
             deleteAllFilesOfDirectory(tempDirectory);
         }
-        return wasSuccessful;
+        return updateStatusList;
     }
 
 
-    private String createObjectsFromLatestCommit(Repository repository, ApiToken apiToken) throws IOException, GitAPIException {
-        ObjectLoader loader = repository.open(getObjectIdOfYamlFileFromLatestCommit(repository, apiToken));
-        return fileMapperService.mapObjectToJson(fileMapperService.mapYamlWith(getFileFromByteStream(apiToken, loader.getBytes()), GraphQLApiConfig.class));
+    private ObjectLoader createObjectLoaderOfLatestCommit(Repository repository, ApiToken apiToken) throws IOException, GitAPIException {
+        return repository.open(getObjectIdOfFileFromLatestCommit(repository, apiToken));
     }
 
+    private ObjectId getObjectIdOfFileFromLatestCommit(Repository repository, ApiToken apiToken) throws IOException, GitAPIException {
+        Optional<RevCommit> latestCommit = Optional.ofNullable(new Git(repository)
+                .log()
+                .setMaxCount(MAX_AMOUNT_OF_FETCHED_REV_COMMITS)
+                .call()
+                .iterator()
+                .next());
 
-    private ObjectId getObjectIdOfYamlFileFromLatestCommit(Repository repository, ApiToken apiToken) throws IOException, GitAPIException {
-        RevCommit latestCommit = new Git(repository).log().setMaxCount(1).call().iterator().next();
-
-        if(latestCommit == null) {
-            throw new IllegalStateException("Exception in fetching latest Commit");
-        }
-
-        TreeWalk treeWalk = new TreeWalk(repository);
-        treeWalk.addTree(latestCommit.getTree());
-        treeWalk.setRecursive(true);
-        treeWalk.setFilter(PathFilter.create(gitCallBuilderService.buildFileSubPathInGitWith(apiToken)));
-
-        if(! treeWalk.next()) {
-            throw new IllegalStateException("Exception in TreeWalk");
-        }
-
-        return treeWalk.getObjectId(0);
+        return walkThroughLatestCommit(repository, apiToken, latestCommit).getObjectId(POSITION_OF_FIRST_OBJECT_ID);
     }
 
-
-    private boolean pushRepositoryToGitHub(Git git, File tempDirectory, File jsonFile, ApiToken apiToken) throws IOException, GitAPIException {
-        File yamlFile = new File(tempDirectory, apiToken.getPath());
-        if(yamlFile.exists() || yamlFile.mkdirs()) {
-            PrintWriter writer = new PrintWriter(new File(yamlFile, apiToken.getFilename()));
-            writer.write(fileMapperService.mapObjectToYaml(fileMapperService.mapJsonWith(jsonFile, GraphQLApiConfig.class)));
-            writer.close();
-
-            git.add().addFilepattern(".").call();
-            git.commit().setMessage("Backend Update " + LocalDateTime.now()).call();
-
-            UsernamePasswordCredentialsProvider credentialsProvider =
-                    new UsernamePasswordCredentialsProvider(apiToken.getUsername(), apiToken.getPassword());
-
-            return wasUpdateSuccessful(git.push().setCredentialsProvider(credentialsProvider).call());
-        }
-        return false;
+    private List<RemoteRefUpdate.Status> pushRepositoryToGitHub(Git git, ApiToken apiToken) throws GitAPIException {
+        git.add().addFilepattern(CONSIDER_ALL_FILES_FILEPATTERN).call();
+        git.commit().setMessage(BACKEND_UPDATE.concat(": ").concat(LocalDateTime.now().toString())).call();
+        return getPushUpdateStatus(git.push()
+                .setCredentialsProvider(new UsernamePasswordCredentialsProvider(apiToken.getUsername(), apiToken.getPassword()))
+                .call());
     }
 
-    private boolean wasUpdateSuccessful(Iterable<PushResult> pushResults) {
-        Predicate<RemoteRefUpdate> isStatusOK = update -> update.getStatus().equals(RemoteRefUpdate.Status.OK);
-        Predicate<PushResult> isPushResultStatusOK = pushResult -> pushResult.getRemoteUpdates().stream().allMatch(isStatusOK);
-        return StreamSupport.stream(pushResults.spliterator(), false).allMatch(isPushResultStatusOK);
-    }
+    private List<RemoteRefUpdate.Status> getPushUpdateStatus(Iterable<PushResult> pushResults) {
+        Function<PushResult, Stream<RemoteRefUpdate.Status>> mapPushResultToRefUpdates = pushResult ->
+                pushResult.getRemoteUpdates()
+                        .stream()
+                        .map(RemoteRefUpdate::getStatus);
 
+        return StreamSupport.stream(pushResults.spliterator(), IS_SEQUENTIAL_STREAM)
+                .flatMap(mapPushResultToRefUpdates)
+                .collect(Collectors.toList());
+    }
 
     private Git cloneRemoteGitRepository(File tempFile, ApiToken apiToken) throws GitAPIException {
         return Git.cloneRepository()
@@ -128,9 +121,8 @@ public class GitServiceImpl implements GitService{
                 .call();
     }
 
-
-    private File createTempDirectory() throws IOException {
-        Path tempPath = Files.createTempDirectory(TEMPORARY_FOLDER_NAME);
+    private File createTempDirectory(ApiToken apiToken) throws IOException {
+        Path tempPath = Files.createTempDirectory(TEMPORARY_FOLDER_NAME.concat(apiToken.getPath()));
         Files.deleteIfExists(tempPath);
         return tempPath.toFile();
     }
@@ -144,10 +136,13 @@ public class GitServiceImpl implements GitService{
     private void deleteAllFilesOfDirectory(File file) {
         if(file != null) {
             File[] files = file.listFiles();
-            if(files != null) {
+            if(Optional.ofNullable(files).isPresent()) {
                 for(File childFile : files) {
-                    if(childFile.isDirectory()) deleteAllFilesOfDirectory(childFile);
-                    else childFile.deleteOnExit();
+                    if(childFile.isDirectory()) {
+                        deleteAllFilesOfDirectory(childFile);
+                    } else {
+                        childFile.deleteOnExit();
+                    }
                 }
             }
             file.deleteOnExit();
