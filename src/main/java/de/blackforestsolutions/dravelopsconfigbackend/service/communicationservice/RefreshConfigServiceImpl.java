@@ -3,12 +3,13 @@ package de.blackforestsolutions.dravelopsconfigbackend.service.communicationserv
 import de.blackforestsolutions.dravelopsconfigbackend.exceptionhandling.RefreshExecutionException;
 import de.blackforestsolutions.dravelopsconfigbackend.service.communicationservice.restcalls.CallService;
 import de.blackforestsolutions.dravelopsdatamodel.ApiToken;
-import de.blackforestsolutions.dravelopsdatamodel.util.DravelOpsHttpCallBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
+import static de.blackforestsolutions.dravelopsdatamodel.util.DravelOpsHttpCallBuilder.buildUrlWith;
 
 @Service
 public class RefreshConfigServiceImpl implements RefreshConfigService {
@@ -38,7 +39,7 @@ public class RefreshConfigServiceImpl implements RefreshConfigService {
         ApiToken requestToken = new ApiToken(configBackendConfigurationApiToken);
         requestToken.setPath(ACTUATOR_REFRESH_PATH);
 
-        return DravelOpsHttpCallBuilder.buildUrlWith(requestToken).toString();
+        return buildUrlWith(requestToken).toString();
     }
 
 }
