@@ -8,15 +8,14 @@ import org.springframework.context.annotation.Bean;
 @TestConfiguration
 public class ImportApiToken{
 
-    private final String REPOSITORY_NAME = "TestDeployment";
-    private final String REPOSITORY_LINK = "https://github.com/Luca1235/" + REPOSITORY_NAME;
-    private final String FILE_PATH = "projects";
-    private final String FILE_NAME = "application-sbg.yaml";
+    private static final String REPOSITORY_NAME = "TestDeployment";
+    private static final String REPOSITORY_LINK = "https://github.com/Luca1235/" + REPOSITORY_NAME;
+    private static final String FILE_PATH = "projects";
+    private static final String FILE_NAME = "application";
+    private static final String FILE_SUFFIX = ".yaml";
 
-    private final String USERNAME = "Luca1235";
-    private final String PASSWORD_TOKEN = "f186e448c9c80c242f4c7ddd8e10182196c8a261";
-    private final String INCORRECT_PASSWORD_TOKEN = "4815162342";
-
+    private static final String USERNAME = "Luca1235";
+    private static final String PASSWORD_TOKEN = "f186e448c9c80c242f4c7ddd8e10182196c8a261";
 
     @Bean
     @ConfigurationProperties(prefix = "correct")
@@ -28,20 +27,7 @@ public class ImportApiToken{
         apiToken.setPassword(PASSWORD_TOKEN);
         apiToken.setRepository(REPOSITORY_LINK);
         apiToken.setFilename(FILE_NAME);
-
-        return apiToken;
-    }
-
-    @Bean
-    @ConfigurationProperties(prefix = "incorrect")
-    public ApiToken incorrectApiToken() {
-        ApiToken apiToken = new ApiToken();
-
-        apiToken.setPath(FILE_PATH);
-        apiToken.setUsername(USERNAME);
-        apiToken.setPassword(INCORRECT_PASSWORD_TOKEN);
-        apiToken.setRepository(REPOSITORY_LINK);
-        apiToken.setFilename(FILE_NAME);
+        apiToken.setFileSuffix(FILE_SUFFIX);
 
         return apiToken;
     }

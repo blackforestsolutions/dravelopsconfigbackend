@@ -12,6 +12,7 @@ import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Objects;
 
 @Service
 public class FileMapperServiceImpl implements FileMapperService{
@@ -37,6 +38,7 @@ public class FileMapperServiceImpl implements FileMapperService{
 
     @Override
     public <T> File mapObjectToYaml(T object) throws IOException {
+        Objects.requireNonNull(object, "Object is not allowed to be null");
         DravelOpsJsonMapper om = new DravelOpsJsonMapper();
         JsonNode jsonNode = om.readTree(om.writeValueAsString(object));
 
@@ -49,6 +51,7 @@ public class FileMapperServiceImpl implements FileMapperService{
 
     @Override
     public <T> File mapObjectToJson(T object) throws IOException {
+        Objects.requireNonNull(object, "Object is not allowed to be null");
         File tempFile = Files.createTempFile(TEMP_JSON_FILE_NAME, JSON_SUFFIX).toFile();
         PrintWriter writer = new PrintWriter(tempFile);
         writer.write(new DravelOpsJsonMapper().writeValueAsString(object));

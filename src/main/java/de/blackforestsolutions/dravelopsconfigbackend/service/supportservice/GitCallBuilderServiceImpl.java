@@ -37,10 +37,13 @@ public class GitCallBuilderServiceImpl implements GitCallBuilderService{
 
         return apiToken.getPath()
                 .concat("/")
-                .concat(getCustomerProfile())
-                .concat("/")
-                .concat(buildFileName(apiToken));
+                .concat(getCustomerProfile());
     }
+
+    /*
+
+                .concat(buildFileName(apiToken))
+     */
 
     @Override
     public String buildFileName(ApiToken apiToken) {
