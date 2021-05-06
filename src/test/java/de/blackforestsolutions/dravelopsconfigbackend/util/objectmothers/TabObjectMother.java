@@ -1,7 +1,14 @@
 package de.blackforestsolutions.dravelopsconfigbackend.util.objectmothers;
 
-import de.blackforestsolutions.dravelopsconfigbackend.model.Tab;
-import de.blackforestsolutions.dravelopsconfigbackend.model.Variables;
+import de.blackforestsolutions.dravelopsdatamodel.GraphQlTab;
+import de.blackforestsolutions.dravelopsgeneratedcontent.graphql.Tab;
+import de.blackforestsolutions.dravelopsgeneratedcontent.graphql.Variables;
+
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
+import static de.blackforestsolutions.dravelopsconfigbackend.util.objectmothers.VariablesObjectMother.*;
 
 /**
  * Possible Fields:
@@ -19,7 +26,19 @@ public class TabObjectMother{
 
     private static final String DEFAULT_ARRIVAL_PLACEHOLDER = "Ziel";
     private static final String DEFAULT_DEPARTURE_PLACEHOLDER = "Start";
-    private static final String DEFAULT_LAYERS = "venue, address, street, locality\n";
+    private static final List<String> DEFAULT_LAYERS = List.of("venue", "address", "street", "locality");
+
+    public static Map<String, Tab> getTabsWithNoEmptyField() {
+        Map<String, Tab> tabMap = new LinkedHashMap<>();
+        tabMap.put(GraphQlTab.JOURNEY_QUERY.toString(), getTabJourneyQuery(getVariablesWithAllInformation()));
+        tabMap.put(GraphQlTab.JOURNEY_SUBSCRIPTION.toString(), getTabJourneySubscription(getVariablesWithoutArrivalLongitude()));
+        tabMap.put(GraphQlTab.ADDRESS_AUTOCOMPLETION.toString(), getTabAutocompleteAddressesQuery(getVariablesWithLanguageAndText()));
+        tabMap.put(GraphQlTab.NEAREST_ADDRESSES.toString(), getTabNearestAddressesQuery(getVariablesWithLanguageLongitudeLatitudeRadius()));
+        tabMap.put(GraphQlTab.NEAREST_STATIONS.toString(), getTabNearestStationsQuery(getVariablesWithLanguageLongitudeLatitudeRadius()));
+        tabMap.put(GraphQlTab.ALL_STATIONS.toString(), getTabGetAllStationsQueryWithoutVariables());
+        tabMap.put(GraphQlTab.OPERATING_AREA.toString(), getTabGetOperatingAreaQuery());
+        return tabMap;
+    }
 
     public static Tab getTabJourneyQuery(Variables variables) {
         Tab tab = new Tab();
@@ -85,7 +104,7 @@ public class TabObjectMother{
         Tab tab = new Tab();
         tab.setName("Get operating area query");
         tab.setQuery("classpath:graphql/get-polygon-query.graphql");
-        tab.setBufferInMetres(2000L);
+        tab.setBufferInMetres(0L);
         return tab;
     }
 }

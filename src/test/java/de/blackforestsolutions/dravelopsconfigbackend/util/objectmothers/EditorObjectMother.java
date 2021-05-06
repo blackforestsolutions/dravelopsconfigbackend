@@ -1,6 +1,6 @@
 package de.blackforestsolutions.dravelopsconfigbackend.util.objectmothers;
 
-import de.blackforestsolutions.dravelopsconfigbackend.model.Editor;
+import de.blackforestsolutions.dravelopsgeneratedcontent.graphql.Editor;
 
 public class EditorObjectMother{
 

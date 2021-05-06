@@ -1,7 +1,7 @@
 package de.blackforestsolutions.dravelopsconfigbackend.util.objectmothers;
 
-import de.blackforestsolutions.dravelopsconfigbackend.model.Graphql;
-import de.blackforestsolutions.dravelopsconfigbackend.model.Playground;
+import de.blackforestsolutions.dravelopsgeneratedcontent.graphql.Graphql;
+import de.blackforestsolutions.dravelopsgeneratedcontent.graphql.Playground;
 
 public class GraphQlObjectMother{
 

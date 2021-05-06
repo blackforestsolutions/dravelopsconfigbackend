@@ -19,11 +19,13 @@ public class CallServiceImpl implements CallService {
         this.restTemplate = restTemplateBuilder.build();
     }
 
-
     @Override
     public ResponseEntity<String> post(String url, HttpEntity<?> requestEntity) {
         return restTemplate.exchange(url, HttpMethod.POST, requestEntity, String.class);
     }
 
-
+    @Override
+    public ResponseEntity<String> get(String url, HttpEntity<?> requestEntity) {
+        return restTemplate.exchange(url, HttpMethod.GET, requestEntity, String.class);
+    }
 }

@@ -1,6 +1,6 @@
 package de.blackforestsolutions.dravelopsconfigbackend.util.objectmothers;
 
-import de.blackforestsolutions.dravelopsconfigbackend.model.Variables;
+import de.blackforestsolutions.dravelopsgeneratedcontent.graphql.Variables;
 
 /**
  * Possible Fields:

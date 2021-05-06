@@ -15,5 +15,4 @@ public class WebServerConfiguration{
         return new DravelOpsJsonMapper();
     }
 
-
 }

@@ -1,7 +1,7 @@
 package de.blackforestsolutions.dravelopsconfigbackend.util.objectmothers;
 
-import de.blackforestsolutions.dravelopsconfigbackend.model.Editor;
-import de.blackforestsolutions.dravelopsconfigbackend.model.Settings;
+import de.blackforestsolutions.dravelopsgeneratedcontent.graphql.Editor;
+import de.blackforestsolutions.dravelopsgeneratedcontent.graphql.Settings;
 
 public class SettingsObjectMother{
 

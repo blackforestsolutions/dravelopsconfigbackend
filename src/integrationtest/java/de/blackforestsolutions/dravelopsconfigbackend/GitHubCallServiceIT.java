@@ -1,34 +1,19 @@
 package de.blackforestsolutions.dravelopsconfigbackend;
 
-import de.blackforestsolutions.dravelopsconfigbackend.service.communicationservice.git.GitService;
-import de.blackforestsolutions.dravelopsconfigbackend.service.supportservice.GitCallBuilderService;
-import de.blackforestsolutions.dravelopsdatamodel.ApiToken;
-import de.blackforestsolutions.dravelopsdatamodel.testutil.TestUtils;
-import org.eclipse.jgit.api.errors.GitAPIException;
-import org.eclipse.jgit.api.errors.TransportException;
-import org.eclipse.jgit.transport.RemoteRefUpdate;
-import org.junit.jupiter.api.*;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.annotation.DirtiesContext;
-
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @Import(ImportApiToken.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
-public class GitServiceIT{
+public class GitHubCallServiceIT{
 
+    /*
     @Autowired
     private GitService gitService;
     @Autowired
@@ -46,6 +31,8 @@ public class GitServiceIT{
 
         incorrectApiToken = new ApiToken(correctApiToken);
         incorrectApiToken.setPassword("wrongPassword");
+
+
     }
 
     @Test
@@ -90,4 +77,6 @@ public class GitServiceIT{
         File yamlFile = TestUtils.getResourceAsFile("test.files/application-sbg-test-wrong.yaml", "");
         assertThrows(TransportException.class, () -> gitService.pushFileToGitWith(yamlFile, incorrectApiToken));
     }
+
+     */
 }

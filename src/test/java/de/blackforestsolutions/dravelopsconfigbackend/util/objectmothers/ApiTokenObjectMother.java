@@ -13,8 +13,8 @@ public class ApiTokenObjectMother{
         ApiToken apiToken = new ApiToken();
         apiToken.setPath(DEFAULT_FILE_PATH);
         apiToken.setRepository(DEFAULT_REPOSITORY);
-        apiToken.setFilename(DEFAULT_FILE_NAME);
-        apiToken.setFileSuffix(DEFAULT_FILE_SUFFIX);
+        //apiToken.setFilename(DEFAULT_FILE_NAME);
+        //apiToken.setFileSuffix(DEFAULT_FILE_SUFFIX);
         return apiToken;
     }
 
