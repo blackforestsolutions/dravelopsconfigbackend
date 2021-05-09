@@ -10,14 +10,14 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import static de.blackforestsolutions.dravelopsconfigbackend.objectmothers.ApiTokenObjectMother.getConfigBackendConfigurationApiToken;
+import static de.blackforestsolutions.dravelopsconfigbackend.objectmothers.ApiTokenObjectMother.getConfiguredConfigBackendApiToken;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 public class RefreshConfigServiceTest {
 
-    private final ApiToken configBackendConfigurationApiToken = getConfigBackendConfigurationApiToken();
+    private final ApiToken configBackendConfigurationApiToken = getConfiguredConfigBackendApiToken();
     private final CallService callService = mock(CallServiceImpl.class);
 
     private final RefreshConfigService classUnderTest = new RefreshConfigServiceImpl(callService, configBackendConfigurationApiToken);
