@@ -93,11 +93,11 @@
             <artifactId>dravelopsdatamodel</artifactId>
             <version>${blackforestsolutions.dravelopsdatamodel.version}</version>
         </dependency>
-<!--        <dependency>-->
-<!--            <groupId>de.blackforestsolutions</groupId>-->
-<!--            <artifactId>dravelopsgeneratedcontent</artifactId>-->
-<!--            <version>${blackforestsolutions.dravelopsgeneratedcontent.version}</version>-->
-<!--        </dependency>-->
+        <dependency>
+            <groupId>de.blackforestsolutions</groupId>
+            <artifactId>dravelopsgeneratedcontent</artifactId>
+            <version>${blackforestsolutions.dravelopsgeneratedcontent.version}</version>
+        </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.dataformat</groupId>
             <artifactId>jackson-dataformat-yaml</artifactId>
