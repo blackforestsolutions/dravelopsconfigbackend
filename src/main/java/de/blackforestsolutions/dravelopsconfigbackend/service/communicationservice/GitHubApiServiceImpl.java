@@ -40,7 +40,7 @@ public class GitHubApiServiceImpl implements GitHubApiService{
     public CallStatus<GraphQLApiConfig> getGraphQlApiConfig() {
         try {
             ResponseEntity<String> result = buildAndExecuteCall();
-            GraphQLApiConfig apiConfig = gitHubMapperService.mapToGraphQlApiConfigWith(result.getBody());
+            GraphQLApiConfig apiConfig = gitHubMapperService.extractGraphQlApiConfigFrom(result.getBody());
             return new CallStatus<>(apiConfig, Status.SUCCESS, null);
         } catch(Exception e) {
             return new CallStatus<>(null, Status.FAILED, e);
@@ -50,7 +50,7 @@ public class GitHubApiServiceImpl implements GitHubApiService{
     @Override
     public CallStatus<String> pushGraphQlApiConfig(GraphQLApiConfig graphQLApiConfig) {
         try {
-            GitHubFileRequest gitHubFileRequest = gitHubMapperService.mapToGitHubFileRequestWith(graphQLApiConfig);
+            GitHubFileRequest gitHubFileRequest = gitHubMapperService.extractGitHubFileRequestFrom(graphQLApiConfig);
             ResponseEntity<String> result = buildAndExecuteCall(gitHubFileRequest);
             return new CallStatus<>(result.getBody(), Status.SUCCESS, null);
         } catch(Exception e) {

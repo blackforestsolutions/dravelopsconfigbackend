@@ -5,7 +5,7 @@ import de.blackforestsolutions.dravelopsgeneratedcontent.github.GitHubFileReques
 import de.blackforestsolutions.dravelopsgeneratedcontent.graphql.GraphQLApiConfig;
 
 public interface GitHubMapperService{
-    GraphQLApiConfig mapToGraphQlApiConfigWith(String jsonBody) throws JsonProcessingException;
+    GraphQLApiConfig extractGraphQlApiConfigFrom(String jsonBody) throws JsonProcessingException;
 
-    GitHubFileRequest mapToGitHubFileRequestWith(GraphQLApiConfig graphQLApiConfig) throws JsonProcessingException;
+    GitHubFileRequest extractGitHubFileRequestFrom(GraphQLApiConfig graphQLApiConfig) throws JsonProcessingException;
 }

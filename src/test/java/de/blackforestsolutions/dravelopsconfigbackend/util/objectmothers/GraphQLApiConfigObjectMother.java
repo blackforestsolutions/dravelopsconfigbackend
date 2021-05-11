@@ -10,7 +10,7 @@ public class GraphQLApiConfigObjectMother{
     public static GraphQLApiConfig getCorrectGraphQLApiConfig() {
         GraphQLApiConfig config = new GraphQLApiConfig();
         config.setGraphql(getGraphQlWithGivenPlayground(getPlaygroundForSuedbadenApi()));
-        config.setSha("9252f9ad7f01b5d80e2c346fd9140fdedf47f378");
+        config.setSha("06aae133c79ab9b04e2aac8cc178a7d36d33f4b9");
         return config;
     }
 }
