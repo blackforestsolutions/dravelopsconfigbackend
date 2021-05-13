@@ -7,5 +7,5 @@ public interface GitHubHttpCallBuilderService{
 
     String buildGitHubPathWith(ApiToken apiToken);
 
-    HttpHeaders buildGitHubHttpHeader(ApiToken apiToken);
+    HttpHeaders buildGitHubHttpHeaderWith(ApiToken apiToken);
 }

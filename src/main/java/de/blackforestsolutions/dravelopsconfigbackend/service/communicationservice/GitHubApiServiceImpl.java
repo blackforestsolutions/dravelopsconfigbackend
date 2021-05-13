@@ -59,12 +59,12 @@ public class GitHubApiServiceImpl implements GitHubApiService{
     }
 
     private ResponseEntity<String> buildAndExecuteCall() {
-        HttpEntity<?> httpEntity = new HttpEntity<>(callBuilderService.buildGitHubHttpHeader(gitHubConfigApiToken));
+        HttpEntity<?> httpEntity = new HttpEntity<>(callBuilderService.buildGitHubHttpHeaderWith(gitHubConfigApiToken));
         return callService.get(getGitHubRequestString(), httpEntity);
     }
 
     private ResponseEntity<String> buildAndExecuteCall(GitHubFileRequest fileRequest) {
-        HttpEntity<GitHubFileRequest> httpEntity = new HttpEntity<>(fileRequest, callBuilderService.buildGitHubHttpHeader(gitHubConfigApiToken));
+        HttpEntity<GitHubFileRequest> httpEntity = new HttpEntity<>(fileRequest, callBuilderService.buildGitHubHttpHeaderWith(gitHubConfigApiToken));
         return callService.post(getGitHubRequestString(), httpEntity);
     }
 
