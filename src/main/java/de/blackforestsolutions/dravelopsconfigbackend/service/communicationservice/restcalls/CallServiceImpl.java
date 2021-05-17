@@ -1,6 +1,5 @@
 package de.blackforestsolutions.dravelopsconfigbackend.service.communicationservice.restcalls;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.HttpEntity;
@@ -19,11 +18,8 @@ public class CallServiceImpl implements CallService {
         this.restTemplate = restTemplateBuilder.build();
     }
 
-
     @Override
     public ResponseEntity<String> post(String url, HttpEntity<?> requestEntity) {
         return restTemplate.exchange(url, HttpMethod.POST, requestEntity, String.class);
     }
-
-
 }
