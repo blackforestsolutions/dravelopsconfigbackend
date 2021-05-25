@@ -1,12 +1,11 @@
 package de.blackforestsolutions.dravelopsconfigbackend.service.communicationservice;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import de.blackforestsolutions.dravelopsconfigbackend.objectmothers.ApiTokenObjectMother;
+import de.blackforestsolutions.dravelopsconfigbackend.objectmothers.GitHubFileRequestObjectMother;
 import de.blackforestsolutions.dravelopsconfigbackend.service.communicationservice.restcalls.CallService;
 import de.blackforestsolutions.dravelopsconfigbackend.service.mapperservice.GitHubMapperService;
 import de.blackforestsolutions.dravelopsconfigbackend.service.supportservice.GitHubHttpCallBuilderService;
-import de.blackforestsolutions.dravelopsconfigbackend.util.objectmothers.ApiTokenObjectMother;
-import de.blackforestsolutions.dravelopsconfigbackend.util.objectmothers.GitHubFileRequestObjectMother;
-import de.blackforestsolutions.dravelopsconfigbackend.util.objectmothers.GraphQLApiConfigObjectMother;
 import de.blackforestsolutions.dravelopsdatamodel.ApiToken;
 import de.blackforestsolutions.dravelopsdatamodel.CallStatus;
 import de.blackforestsolutions.dravelopsdatamodel.Status;
@@ -24,6 +23,7 @@ import org.springframework.http.ResponseEntity;
 
 import java.io.IOException;
 
+import static de.blackforestsolutions.dravelopsconfigbackend.objectmothers.GraphQLApiConfigObjectMother.getGraphQLApiConfigWithNoEmptyFields;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
@@ -50,7 +50,7 @@ public class GitHubApiServiceTest{
 
         when(mapperService.extractGitHubFileRequestFrom(any(GraphQLApiConfig.class))).thenReturn(GitHubFileRequestObjectMother.getCorrectGitHubFileRequest());
 
-        when(mapperService.extractGraphQlApiConfigFrom(anyString())).thenReturn(GraphQLApiConfigObjectMother.getCorrectGraphQLApiConfig());
+        when(mapperService.extractGraphQlApiConfigFrom(anyString())).thenReturn(getGraphQLApiConfigWithNoEmptyFields());
     }
 
     @Test
@@ -59,7 +59,7 @@ public class GitHubApiServiceTest{
 
         assertThat(result.getStatus()).isEqualTo(Status.SUCCESS);
         assertThat(result.getThrowable()).isNull();
-        assertThat(result.getCalledObject()).isEqualToComparingFieldByFieldRecursively(GraphQLApiConfigObjectMother.getCorrectGraphQLApiConfig());
+        assertThat(result.getCalledObject()).isEqualToComparingFieldByFieldRecursively(getGraphQLApiConfigWithNoEmptyFields());
     }
 
     @Test
@@ -118,7 +118,7 @@ public class GitHubApiServiceTest{
 
     @Test
     void test_putGraphQlApiConfig_should_return_correct_CallStatus() throws JsonProcessingException {
-        GraphQLApiConfig apiConfig = GraphQLApiConfigObjectMother.getCorrectGraphQLApiConfig();
+        GraphQLApiConfig apiConfig = getGraphQLApiConfigWithNoEmptyFields();
 
         CallStatus<String> result = classUnderTest.putGraphQlApiConfig(apiConfig);
 
@@ -129,7 +129,7 @@ public class GitHubApiServiceTest{
 
     @Test
     void test_put_graphQlApiConfig_update_to_GitHub() throws IOException {
-        GraphQLApiConfig config = GraphQLApiConfigObjectMother.getCorrectGraphQLApiConfig();
+        GraphQLApiConfig config = getGraphQLApiConfigWithNoEmptyFields();
         ArgumentCaptor<ApiToken> tokenArg = ArgumentCaptor.forClass(ApiToken.class);
         ArgumentCaptor<String> jsonBodyArg = ArgumentCaptor.forClass(String.class);
         ArgumentCaptor<String> urlArg = ArgumentCaptor.forClass(String.class);
@@ -155,7 +155,7 @@ public class GitHubApiServiceTest{
     @Test
     void test_putGraphQlApiConfig_and_thrown_exception_by_GitHubHttpCallBuilderService_returns_failed_callStatus() throws JsonProcessingException {
         when(callBuilderService.buildGitHubHttpHeaderWith(any(ApiToken.class))).thenThrow(NullPointerException.class);
-        GraphQLApiConfig config = GraphQLApiConfigObjectMother.getCorrectGraphQLApiConfig();
+        GraphQLApiConfig config = getGraphQLApiConfigWithNoEmptyFields();
 
         CallStatus<String> result = classUnderTest.putGraphQlApiConfig(config);
 
@@ -167,7 +167,7 @@ public class GitHubApiServiceTest{
     @Test
     void test_putGraphQlApiConfig_and_thrown_exception_by_GitHubMapperService_returns_failed_callStatus() throws JsonProcessingException {
         when(mapperService.extractGitHubFileRequestFrom(any(GraphQLApiConfig.class))).thenThrow(NullPointerException.class);
-        GraphQLApiConfig config = GraphQLApiConfigObjectMother.getCorrectGraphQLApiConfig();
+        GraphQLApiConfig config = getGraphQLApiConfigWithNoEmptyFields();
 
         CallStatus<String> result = classUnderTest.putGraphQlApiConfig(config);
 
@@ -179,7 +179,7 @@ public class GitHubApiServiceTest{
     @Test
     void test_putGraphQlApiConfig_and_thrown_exception_by_CallService_put_returns_failed_callStatus() throws JsonProcessingException {
         when(callService.put(anyString(), any(HttpEntity.class))).thenThrow(NullPointerException.class);
-        GraphQLApiConfig config = GraphQLApiConfigObjectMother.getCorrectGraphQLApiConfig();
+        GraphQLApiConfig config = getGraphQLApiConfigWithNoEmptyFields();
 
         CallStatus<String> result = classUnderTest.putGraphQlApiConfig(config);
 
@@ -191,7 +191,7 @@ public class GitHubApiServiceTest{
     @Test
     void test_putGraphQlApiConfig_and_thrown_exception_by_CallService_get_returns_failed_callStatus() throws JsonProcessingException {
         when(callService.get(anyString(), any(HttpEntity.class))).thenThrow(NullPointerException.class);
-        GraphQLApiConfig config = GraphQLApiConfigObjectMother.getCorrectGraphQLApiConfig();
+        GraphQLApiConfig config = getGraphQLApiConfigWithNoEmptyFields();
 
         CallStatus<String> result = classUnderTest.putGraphQlApiConfig(config);
 

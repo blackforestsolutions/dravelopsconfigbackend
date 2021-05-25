@@ -9,8 +9,8 @@ import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 
-import static de.blackforestsolutions.dravelopsconfigbackend.util.objectmothers.GitHubFileRequestObjectMother.getCorrectGitHubFileRequest;
-import static de.blackforestsolutions.dravelopsconfigbackend.util.objectmothers.GraphQLApiConfigObjectMother.getCorrectGraphQLApiConfig;
+import static de.blackforestsolutions.dravelopsconfigbackend.objectmothers.GitHubFileRequestObjectMother.getCorrectGitHubFileRequest;
+import static de.blackforestsolutions.dravelopsconfigbackend.objectmothers.GraphQLApiConfigObjectMother.getGraphQLApiConfigWithNoEmptyFields;
 import static de.blackforestsolutions.dravelopsdatamodel.testutil.TestUtils.getResourceFileAsString;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -24,12 +24,12 @@ public class GitHubMapperServiceTest {
 
         GraphQLApiConfig result = classUnderTest.extractGraphQlApiConfigFrom(testJson);
 
-        assertThat(result).isEqualToComparingFieldByFieldRecursively(getCorrectGraphQLApiConfig());
+        assertThat(result).isEqualToComparingFieldByFieldRecursively(getGraphQLApiConfigWithNoEmptyFields());
     }
 
     @Test
     void test_extractGitHubFileRequestFrom_with_correct_GraphQlApiConfig_returns_correct_gitHubFileRequest() throws IOException {
-        GraphQLApiConfig testApiConfig = getCorrectGraphQLApiConfig();
+        GraphQLApiConfig testApiConfig = getGraphQLApiConfigWithNoEmptyFields();
 
         GitHubFileRequest result = classUnderTest.extractGitHubFileRequestFrom(testApiConfig);
 
@@ -38,7 +38,7 @@ public class GitHubMapperServiceTest {
 
     @Test
     void test_map_correct_GraphQlApiConfig_to_GitHubFileRequest_and_GitHubFileRequest_to_GraphQlApiConfig_returns_same_GraphQlApiConfig() throws IOException {
-        GraphQLApiConfig testApiConfig = getCorrectGraphQLApiConfig();
+        GraphQLApiConfig testApiConfig = getGraphQLApiConfigWithNoEmptyFields();
 
         GitHubFileRequest mappedRequest = classUnderTest.extractGitHubFileRequestFrom(testApiConfig);
         GraphQLApiConfig result = classUnderTest.extractGraphQlApiConfigFrom(new DravelOpsJsonMapper().writeValueAsString(mappedRequest));

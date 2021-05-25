@@ -1,8 +1,8 @@
 package de.blackforestsolutions.dravelopsconfigbackend;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import de.blackforestsolutions.dravelopsconfigbackend.objectmothers.GraphQLApiConfigObjectMother;
 import de.blackforestsolutions.dravelopsconfigbackend.service.communicationservice.GitHubApiService;
-import de.blackforestsolutions.dravelopsconfigbackend.util.objectmothers.GraphQLApiConfigObjectMother;
 import de.blackforestsolutions.dravelopsdatamodel.CallStatus;
 import de.blackforestsolutions.dravelopsdatamodel.Status;
 import de.blackforestsolutions.dravelopsgeneratedcontent.graphql.GraphQLApiConfig;
@@ -32,7 +32,7 @@ public class GitHubApiServiceIT{
 
     @Test
     void test_putGraphQlApiConfig_to_gitHub_with_correct_api_token_() throws JsonProcessingException {
-        GraphQLApiConfig motherObject = GraphQLApiConfigObjectMother.getCorrectGraphQLApiConfig();
+        GraphQLApiConfig motherObject = GraphQLApiConfigObjectMother.getGraphQLApiConfigWithNoEmptyFields();
         motherObject.getGraphql().getPlayground().getSettings().getEditor().setTheme("light");
 
         CallStatus<String> callStatus = classUnderTest.putGraphQlApiConfig(motherObject);

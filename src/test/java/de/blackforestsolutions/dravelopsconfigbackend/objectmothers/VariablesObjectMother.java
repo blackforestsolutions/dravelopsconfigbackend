@@ -4,7 +4,7 @@ import de.blackforestsolutions.dravelopsgeneratedcontent.graphql.Variables;
 
 public class VariablesObjectMother {
 
-    private static final String DEFAULT_DATETIME = "2020-09-30T13:00+02:00";
+    private static final String DEFAULT_DATETIME = "2020-09-30T13:00:00+02:00";
     private static final double DEFAULT_DEPARTURE_LATITUDE = 48.048381d;
     private static final double DEFAULT_DEPARTURE_LONGITUDE = 8.209198d;
     private static final double DEFAULT_ARRIVAL_LATITUDE = 48.087517d;

@@ -10,7 +10,7 @@ public class GraphQLApiConfigObjectMother {
         GraphQLApiConfig config = new GraphQLApiConfig();
 
         config.setGraphql(getGraphQlWithNoEmptyFields());
-        config.setSha("9252f9ad7f01b5d80e2c346fd9140fdedf47f378");
+        config.setSha("466c1149863ba873988b38a0aed477bfce968e7c");
 
         return config;
     }

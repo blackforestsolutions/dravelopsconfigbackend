@@ -1,9 +1,9 @@
 package de.blackforestsolutions.dravelopsconfigbackend;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import de.blackforestsolutions.dravelopsconfigbackend.objectmothers.GitHubFileRequestObjectMother;
 import de.blackforestsolutions.dravelopsconfigbackend.service.communicationservice.restcalls.CallService;
 import de.blackforestsolutions.dravelopsconfigbackend.service.supportservice.GitHubHttpCallBuilderService;
-import de.blackforestsolutions.dravelopsconfigbackend.util.objectmothers.GitHubFileRequestObjectMother;
 import de.blackforestsolutions.dravelopsdatamodel.ApiToken;
 import de.blackforestsolutions.dravelopsdatamodel.util.DravelOpsHttpCallBuilder;
 import de.blackforestsolutions.dravelopsdatamodel.util.DravelOpsJsonMapper;
