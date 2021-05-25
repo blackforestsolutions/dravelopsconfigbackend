@@ -4,11 +4,11 @@ import de.blackforestsolutions.dravelopsdatamodel.ApiToken;
 
 public class ApiTokenObjectMother{
 
-    private static final String DEFAULT_REPOSITORY = "TestName/TestRepoName";
+    private static final String DEFAULT_REPOSITORY = "blackforestsolutions/dravelopsdeployment";
     private static final String PROTOCOL = "https";
     private static final String HOST = "api.github.com";
-    private static final String DEFAULT_FILE_PATH = "projects/sbg/application-sbg.yaml";
-    private static final String PASSWORD = "1234";
+    private static final String DEFAULT_FILE_PATH = "projects/sbg/application-sbg.yml";
+    private static final String PASSWORD = "token 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";
 
     public static ApiToken getCorrectApiToken() {
         ApiToken apiToken = new ApiToken();

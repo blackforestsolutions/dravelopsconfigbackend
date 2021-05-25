@@ -18,6 +18,8 @@ public class GitHubConfiguration{
     private String repository;
     @Value("${github.filepath}")
     private String filepath;
+    @Value("${github.password}")
+    private String password;
 
     @RefreshScope
     @Bean
@@ -27,6 +29,7 @@ public class GitHubConfiguration{
         apiToken.setHost(configBackendHost);
         apiToken.setRepository(repository);
         apiToken.setFilepath(filepath);
+        apiToken.setPassword(password);
         return apiToken;
     }
 }

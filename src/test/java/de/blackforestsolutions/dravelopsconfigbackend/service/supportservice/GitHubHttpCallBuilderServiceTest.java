@@ -13,13 +13,12 @@ class GitHubHttpCallBuilderServiceTest{
 
     private final GitHubHttpCallBuilderService classUnderTest = new GitHubHttpCallBuilderServiceImpl();
 
-
     @Test
     void test_buildGitHubPathWith_correct_api_token_returns_valid_path() {
         ApiToken apiToken = ApiTokenObjectMother.getCorrectApiToken();
 
         assertThat(classUnderTest.buildGitHubPathWith(apiToken))
-                .isEqualTo("/repos/TestName/TestRepoName/contents/projects/sbg/application-sbg.yaml");
+                .isEqualTo("/repos/blackforestsolutions/dravelopsdeployment/contents/projects/sbg/application-sbg.yml");
     }
 
     @Test

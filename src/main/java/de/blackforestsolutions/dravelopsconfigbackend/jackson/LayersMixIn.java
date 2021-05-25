@@ -7,13 +7,24 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import java.util.List;
 
-public abstract class LayersMixIn {
+public abstract class LayersMixIn{
 
+    /**
+     * This field could potentially be unused at compilation time.
+     * It is internally called by Jackson via reflection.
+     */
+    @SuppressWarnings("unused")
     @JsonProperty("layers")
     @JsonSerialize(using = LayersSerializer.class)
     @JsonDeserialize(using = LayersDeserializer.class)
-    List<String> layers;
+    private List<String> layers;
 
+
+    /**
+     * This constructor could potentially be unused at compilation time.
+     * It is internally called by Jackson via reflection.
+     */
+    @SuppressWarnings("unused")
     @JsonCreator
     public LayersMixIn(@JsonProperty("layers") List<String> layers) {
 

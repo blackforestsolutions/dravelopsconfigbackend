@@ -7,5 +7,5 @@ import de.blackforestsolutions.dravelopsgeneratedcontent.graphql.GraphQLApiConfi
 public interface GitHubApiService{
     CallStatus<GraphQLApiConfig> getGraphQlApiConfig();
 
-    CallStatus<String> pushGraphQlApiConfig(GraphQLApiConfig graphQLApiConfig) throws JsonProcessingException;
+    CallStatus<String> putGraphQlApiConfig(GraphQLApiConfig graphQLApiConfig) throws JsonProcessingException;
 }

@@ -28,7 +28,7 @@ public class RefreshConfigServiceImpl implements RefreshConfigService {
     @Override
     public void refreshConfigs() {
         String requestUrl = buildRequestUrl();
-        ResponseEntity<String> result = callService.post(requestUrl, HttpEntity.EMPTY);
+        ResponseEntity<String> result = callService.put(requestUrl, HttpEntity.EMPTY);
 
         if (!result.getStatusCode().equals(HttpStatus.NO_CONTENT)) {
             throw new RefreshExecutionException();

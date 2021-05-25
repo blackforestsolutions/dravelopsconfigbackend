@@ -10,13 +10,18 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 @Service
-public class CallServiceImpl implements CallService {
+public class CallServiceImpl implements CallService{
 
     private final RestTemplate restTemplate;
 
     @Autowired
     public CallServiceImpl(RestTemplateBuilder restTemplateBuilder) {
         this.restTemplate = restTemplateBuilder.build();
+    }
+
+    @Override
+    public ResponseEntity<String> put(String url, HttpEntity<?> requestEntity) {
+        return restTemplate.exchange(url, HttpMethod.PUT, requestEntity, String.class);
     }
 
     @Override

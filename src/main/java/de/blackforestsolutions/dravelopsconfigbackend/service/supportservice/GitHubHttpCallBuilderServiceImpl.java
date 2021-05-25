@@ -31,7 +31,6 @@ public class GitHubHttpCallBuilderServiceImpl implements GitHubHttpCallBuilderSe
     @Override
     public HttpHeaders buildGitHubHttpHeaderWith(@NonNull ApiToken apiToken) {
         Objects.requireNonNull(apiToken.getPassword(), "password is not allowed to be null");
-
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add(HttpHeaders.AUTHORIZATION, apiToken.getPassword());
         return httpHeaders;

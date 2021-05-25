@@ -32,15 +32,15 @@ public class GitHubApiServiceImpl implements GitHubApiService{
                                 ApiToken gitHubConfigApiToken) {
         this.callBuilderService = callBuilderService;
         this.callService = callService;
-        this.gitHubConfigApiToken = gitHubConfigApiToken;
         this.gitHubMapperService = gitHubMapperService;
+        this.gitHubConfigApiToken = gitHubConfigApiToken;
     }
 
     @Override
     public CallStatus<GraphQLApiConfig> getGraphQlApiConfig() {
         try {
-            ResponseEntity<String> result = buildAndExecuteCall();
-            GraphQLApiConfig apiConfig = gitHubMapperService.extractGraphQlApiConfigFrom(result.getBody());
+            ResponseEntity<String> getResponse = buildAndExecuteCall();
+            GraphQLApiConfig apiConfig = gitHubMapperService.extractGraphQlApiConfigFrom(getResponse.getBody());
             return new CallStatus<>(apiConfig, Status.SUCCESS, null);
         } catch(Exception e) {
             return new CallStatus<>(null, Status.FAILED, e);
@@ -48,11 +48,16 @@ public class GitHubApiServiceImpl implements GitHubApiService{
     }
 
     @Override
-    public CallStatus<String> pushGraphQlApiConfig(GraphQLApiConfig graphQLApiConfig) {
+    public CallStatus<String> putGraphQlApiConfig(GraphQLApiConfig graphQLApiConfig) {
         try {
             GitHubFileRequest gitHubFileRequest = gitHubMapperService.extractGitHubFileRequestFrom(graphQLApiConfig);
-            ResponseEntity<String> result = buildAndExecuteCall(gitHubFileRequest);
-            return new CallStatus<>(result.getBody(), Status.SUCCESS, null);
+
+            ResponseEntity<String> getResponse = buildAndExecuteCall();
+            GraphQLApiConfig apiConfig = gitHubMapperService.extractGraphQlApiConfigFrom(getResponse.getBody());
+            gitHubFileRequest.setSha(apiConfig.getSha());
+
+            ResponseEntity<String> putResponse = buildAndExecuteCall(gitHubFileRequest);
+            return new CallStatus<>(putResponse.getBody(), Status.SUCCESS, null);
         } catch(Exception e) {
             return new CallStatus<>(null, Status.FAILED, e);
         }
@@ -60,15 +65,15 @@ public class GitHubApiServiceImpl implements GitHubApiService{
 
     private ResponseEntity<String> buildAndExecuteCall() {
         HttpEntity<?> httpEntity = new HttpEntity<>(callBuilderService.buildGitHubHttpHeaderWith(gitHubConfigApiToken));
-        return callService.get(getGitHubRequestString(), httpEntity);
+        return callService.get(getGitHubRequestUrl(), httpEntity);
     }
 
     private ResponseEntity<String> buildAndExecuteCall(GitHubFileRequest fileRequest) {
         HttpEntity<GitHubFileRequest> httpEntity = new HttpEntity<>(fileRequest, callBuilderService.buildGitHubHttpHeaderWith(gitHubConfigApiToken));
-        return callService.post(getGitHubRequestString(), httpEntity);
+        return callService.put(getGitHubRequestUrl(), httpEntity);
     }
 
-    private String getGitHubRequestString() {
+    private String getGitHubRequestUrl() {
         ApiToken builder = new ApiToken(gitHubConfigApiToken);
         builder.setPath(callBuilderService.buildGitHubPathWith(gitHubConfigApiToken));
         URL requestUrl = buildUrlWith(builder);

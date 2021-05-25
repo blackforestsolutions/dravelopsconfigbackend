@@ -10,6 +10,7 @@ import de.blackforestsolutions.dravelopsgeneratedcontent.graphql.GraphQLApiConfi
 import de.blackforestsolutions.dravelopsgeneratedcontent.graphql.Tab;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.Base64;
@@ -22,7 +23,7 @@ public class GitHubMapperServiceImpl implements GitHubMapperService {
     private static final String LINE_SEPARATOR = "\n";
 
     @Override
-    public GraphQLApiConfig extractGraphQlApiConfigFrom(String jsonBody) throws JsonProcessingException {
+    public GraphQLApiConfig extractGraphQlApiConfigFrom(String jsonBody) throws IOException {
         DravelOpsJsonMapper mapper = new DravelOpsJsonMapper();
         GitHubFileResponse gitHubFileResponse = mapper.readValue(jsonBody, GitHubFileResponse.class);
 
@@ -40,16 +41,16 @@ public class GitHubMapperServiceImpl implements GitHubMapperService {
         return gitHubFileRequest;
     }
 
-    private GraphQLApiConfig extractGitHubFileRequestFrom(GitHubFileResponse gitHubFileResponse) throws JsonProcessingException {
-        String yamlString = new String(Base64.getMimeDecoder().decode(gitHubFileResponse.getContent()));
-        return extractGraphQLApiConfigFrom(yamlString, gitHubFileResponse.getSha());
+    private GraphQLApiConfig extractGitHubFileRequestFrom(GitHubFileResponse gitHubFileResponse) throws IOException {
+        byte[] yamlBytes = Base64.getMimeDecoder().decode(gitHubFileResponse.getContent());
+        return extractGraphQLApiConfigFrom(yamlBytes, gitHubFileResponse.getSha());
     }
 
-    private GraphQLApiConfig extractGraphQLApiConfigFrom(String yamlString, String shaId) throws JsonProcessingException {
+    private GraphQLApiConfig extractGraphQLApiConfigFrom(byte[] yamlBytes, String shaId) throws IOException {
         DravelOpsJsonMapper mapper = new DravelOpsJsonMapper(new YAMLFactory());
         mapper.addMixIn(Tab.class, LayersMixIn.class);
 
-        GraphQLApiConfig graphQLApiConfig = mapper.readValue(yamlString, GraphQLApiConfig.class);
+        GraphQLApiConfig graphQLApiConfig = mapper.readValue(yamlBytes, GraphQLApiConfig.class);
         graphQLApiConfig.setSha(shaId);
         return graphQLApiConfig;
     }
