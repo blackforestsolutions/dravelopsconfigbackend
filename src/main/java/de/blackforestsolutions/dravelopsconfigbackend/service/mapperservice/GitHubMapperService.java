@@ -6,7 +6,7 @@ import de.blackforestsolutions.dravelopsgeneratedcontent.graphql.GraphQLApiConfi
 
 import java.io.IOException;
 
-public interface GitHubMapperService{
+public interface GitHubMapperService {
     GraphQLApiConfig extractGraphQlApiConfigFrom(String jsonBody) throws IOException;
 
     GitHubFileRequest extractGitHubFileRequestFrom(GraphQLApiConfig graphQLApiConfig) throws JsonProcessingException;

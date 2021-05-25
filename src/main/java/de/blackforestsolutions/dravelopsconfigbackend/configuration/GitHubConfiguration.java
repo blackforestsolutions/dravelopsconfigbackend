@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Bean;
 
 @RefreshScope
 @SpringBootConfiguration
-public class GitHubConfiguration{
+public class GitHubConfiguration {
 
     @Value("${github.protocol}")
     private String configBackendProtocol;

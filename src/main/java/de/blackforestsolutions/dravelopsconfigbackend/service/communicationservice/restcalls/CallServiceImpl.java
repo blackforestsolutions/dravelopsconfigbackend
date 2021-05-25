@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 @Service
-public class CallServiceImpl implements CallService{
+public class CallServiceImpl implements CallService {
 
     private final RestTemplate restTemplate;
 

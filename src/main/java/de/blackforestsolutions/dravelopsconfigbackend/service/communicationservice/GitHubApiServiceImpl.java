@@ -18,7 +18,7 @@ import java.net.URL;
 import static de.blackforestsolutions.dravelopsdatamodel.util.DravelOpsHttpCallBuilder.buildUrlWith;
 
 @Service
-public class GitHubApiServiceImpl implements GitHubApiService{
+public class GitHubApiServiceImpl implements GitHubApiService {
 
     private final GitHubHttpCallBuilderService callBuilderService;
     private final CallService callService;
@@ -42,7 +42,7 @@ public class GitHubApiServiceImpl implements GitHubApiService{
             ResponseEntity<String> getResponse = buildAndExecuteCall();
             GraphQLApiConfig apiConfig = gitHubMapperService.extractGraphQlApiConfigFrom(getResponse.getBody());
             return new CallStatus<>(apiConfig, Status.SUCCESS, null);
-        } catch(Exception e) {
+        } catch (Exception e) {
             return new CallStatus<>(null, Status.FAILED, e);
         }
     }
@@ -58,7 +58,7 @@ public class GitHubApiServiceImpl implements GitHubApiService{
 
             ResponseEntity<String> putResponse = buildAndExecuteCall(gitHubFileRequest);
             return new CallStatus<>(putResponse.getBody(), Status.SUCCESS, null);
-        } catch(Exception e) {
+        } catch (Exception e) {
             return new CallStatus<>(null, Status.FAILED, e);
         }
     }

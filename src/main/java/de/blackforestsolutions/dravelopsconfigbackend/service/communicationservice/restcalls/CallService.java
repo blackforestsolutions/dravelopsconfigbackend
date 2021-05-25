@@ -3,7 +3,7 @@ package de.blackforestsolutions.dravelopsconfigbackend.service.communicationserv
 import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
 
-public interface CallService{
+public interface CallService {
     ResponseEntity<String> put(String url, HttpEntity<?> requestEntity);
 
     ResponseEntity<String> post(String url, HttpEntity<?> requestEntity);

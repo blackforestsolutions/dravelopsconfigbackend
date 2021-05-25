@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import java.util.Objects;
 
 @Service
-public class GitHubHttpCallBuilderServiceImpl implements GitHubHttpCallBuilderService{
+public class GitHubHttpCallBuilderServiceImpl implements GitHubHttpCallBuilderService {
 
     private static final String REPO_PATH = "repos";
     private static final String CONTENTS_PATH = "contents";

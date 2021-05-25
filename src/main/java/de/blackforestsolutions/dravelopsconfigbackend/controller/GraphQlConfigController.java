@@ -5,6 +5,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("configbackend")
-public class GraphQlConfigController{
+public class GraphQlConfigController {
 
 }

@@ -7,7 +7,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import java.util.List;
 
-public abstract class LayersMixIn{
+public abstract class LayersMixIn {
 
     /**
      * This field could potentially be unused at compilation time.
