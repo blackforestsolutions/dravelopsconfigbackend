@@ -1,15 +1,14 @@
 package de.blackforestsolutions.dravelopsconfigbackend;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import de.blackforestsolutions.dravelopsconfigbackend.objectmothers.GraphQLApiConfigObjectMother;
 import de.blackforestsolutions.dravelopsconfigbackend.service.communicationservice.GitHubApiService;
-import de.blackforestsolutions.dravelopsdatamodel.CallStatus;
-import de.blackforestsolutions.dravelopsdatamodel.Status;
 import de.blackforestsolutions.dravelopsgeneratedcontent.graphql.GraphQLApiConfig;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
+
+import java.io.IOException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -21,24 +20,19 @@ public class GitHubApiServiceIT{
     private GitHubApiService classUnderTest;
 
     @Test
-    void test_getGraphQlApiConfig_from_gitHub_with_correct_api_token_is_equal_to_local_mother_config() {
-        CallStatus<GraphQLApiConfig> status = classUnderTest.getGraphQlApiConfig();
+    void test_getGraphQlApiConfig_from_gitHub_with_correct_api_token_is_equal_to_local_mother_config() throws IOException {
+        GraphQLApiConfig result = classUnderTest.getGraphQlApiConfig();
 
-        assertThat(status.getStatus()).isEqualTo(Status.SUCCESS);
-        assertThat(status.getThrowable()).isNull();
-        assertThat(status.getCalledObject().getSha()).isNotEmpty();
-        assertThat(status.getCalledObject().getGraphql()).isNotNull();
+        assertThat(result).isNotNull();
+        assertThat(result.getSha()).isNotEmpty();
+        assertThat(result.getGraphql()).isNotNull();
     }
 
     @Test
-    void test_putGraphQlApiConfig_to_gitHub_with_correct_api_token_() throws JsonProcessingException {
+    void test_putGraphQlApiConfig_to_gitHub_with_correct_api_token_() throws IOException {
         GraphQLApiConfig motherObject = GraphQLApiConfigObjectMother.getGraphQLApiConfigWithNoEmptyFields();
         motherObject.getGraphql().getPlayground().getSettings().getEditor().setTheme("light");
 
-        CallStatus<String> callStatus = classUnderTest.putGraphQlApiConfig(motherObject);
-
-        assertThat(callStatus.getStatus()).isEqualTo(Status.SUCCESS);
-        assertThat(callStatus.getThrowable()).isNull();
-        assertThat(callStatus.getCalledObject()).isNotEmpty();
+        classUnderTest.putGraphQlApiConfig(motherObject);
     }
 }

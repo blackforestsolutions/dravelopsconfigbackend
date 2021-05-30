@@ -7,8 +7,6 @@ import de.blackforestsolutions.dravelopsconfigbackend.service.communicationservi
 import de.blackforestsolutions.dravelopsconfigbackend.service.mapperservice.GitHubMapperService;
 import de.blackforestsolutions.dravelopsconfigbackend.service.supportservice.GitHubHttpCallBuilderService;
 import de.blackforestsolutions.dravelopsdatamodel.ApiToken;
-import de.blackforestsolutions.dravelopsdatamodel.CallStatus;
-import de.blackforestsolutions.dravelopsdatamodel.Status;
 import de.blackforestsolutions.dravelopsdatamodel.testutil.TestUtils;
 import de.blackforestsolutions.dravelopsgeneratedcontent.github.GitHubFileRequest;
 import de.blackforestsolutions.dravelopsgeneratedcontent.graphql.GraphQLApiConfig;
@@ -26,6 +24,7 @@ import java.io.IOException;
 import static de.blackforestsolutions.dravelopsconfigbackend.configuration.TestConfiguration.*;
 import static de.blackforestsolutions.dravelopsconfigbackend.objectmothers.GraphQLApiConfigObjectMother.getGraphQLApiConfigWithNoEmptyFields;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 public class GitHubApiServiceTest{
@@ -55,12 +54,11 @@ public class GitHubApiServiceTest{
     }
 
     @Test
-    void test_getGraphQlApiConfig_should_return_correct_CallStatus() {
-        CallStatus<GraphQLApiConfig> result = classUnderTest.getGraphQlApiConfig();
+    void test_getGraphQlApiConfig_should_return_correct_CallStatus() throws IOException {
+        GraphQLApiConfig result = classUnderTest.getGraphQlApiConfig();
 
-        assertThat(result.getStatus()).isEqualTo(Status.SUCCESS);
-        assertThat(result.getThrowable()).isNull();
-        assertThat(result.getCalledObject()).isEqualToComparingFieldByFieldRecursively(getGraphQLApiConfigWithNoEmptyFields());
+        assertThat(result).isNotNull();
+        assertThat(result).isEqualToComparingFieldByFieldRecursively(getGraphQLApiConfigWithNoEmptyFields());
     }
 
     @Test
@@ -84,48 +82,24 @@ public class GitHubApiServiceTest{
     }
 
     @Test
-    void test_getGraphQlApiConfig_and_thrown_exception_by_GitHubHttpCallBuilderService_returns_failed_callStatus() {
+    void test_getGraphQlApiConfig_passes_exception_when_callBuilderService_throws_exception() {
         when(callBuilderService.buildGitHubHttpHeaderWith(any(ApiToken.class))).thenThrow(NullPointerException.class);
 
-        CallStatus<GraphQLApiConfig> result = classUnderTest.getGraphQlApiConfig();
-
-        assertThat(result.getStatus()).isEqualTo(Status.FAILED);
-        assertThat(result.getThrowable()).isInstanceOf(NullPointerException.class);
-        assertThat(result.getCalledObject()).isNull();
+        assertThrows(NullPointerException.class, classUnderTest::getGraphQlApiConfig);
     }
 
     @Test
-    void test_getGraphQlApiConfig_and_thrown_exception_by_CallService_returns_failed_callStatus() {
+    void test_getGraphQlApiConfig_passes_exception_when_callService_throws_exception() {
         when(callService.get(anyString(), any(HttpEntity.class))).thenThrow(NullPointerException.class);
 
-        CallStatus<GraphQLApiConfig> result = classUnderTest.getGraphQlApiConfig();
-
-        assertThat(result.getStatus()).isEqualTo(Status.FAILED);
-        assertThat(result.getThrowable()).isInstanceOf(NullPointerException.class);
-        assertThat(result.getCalledObject()).isNull();
+        assertThrows(NullPointerException.class, classUnderTest::getGraphQlApiConfig);
     }
 
     @Test
-    void test_getGraphQlApiConfig_and_thrown_exception_by_GitHubMapperService_returns_failed_callStatus() throws IOException {
+    void test_getGraphQlApiConfig_passes_exception_when_mapperService_throws_exception() throws IOException {
         when(mapperService.extractGraphQlApiConfigFrom(anyString())).thenThrow(NullPointerException.class);
 
-        CallStatus<GraphQLApiConfig> result = classUnderTest.getGraphQlApiConfig();
-
-        assertThat(result.getStatus()).isEqualTo(Status.FAILED);
-        assertThat(result.getThrowable()).isInstanceOf(NullPointerException.class);
-        assertThat(result.getCalledObject()).isNull();
-    }
-
-
-    @Test
-    void test_putGraphQlApiConfig_should_return_correct_CallStatus() throws JsonProcessingException {
-        GraphQLApiConfig apiConfig = getGraphQLApiConfigWithNoEmptyFields();
-
-        CallStatus<String> result = classUnderTest.putGraphQlApiConfig(apiConfig);
-
-        assertThat(result.getStatus()).isEqualTo(Status.SUCCESS);
-        assertThat(result.getThrowable()).isNull();
-        assertThat(result.getCalledObject()).isNotEmpty();
+        assertThrows(NullPointerException.class, classUnderTest::getGraphQlApiConfig);
     }
 
     @Test
@@ -154,59 +128,31 @@ public class GitHubApiServiceTest{
     }
 
     @Test
-    void test_putGraphQlApiConfig_and_thrown_exception_by_GitHubHttpCallBuilderService_returns_failed_callStatus() throws JsonProcessingException {
+    void test_putGraphQlApiConfig_passes_exception_when_callBuilderService_throws_exception() {
         when(callBuilderService.buildGitHubHttpHeaderWith(any(ApiToken.class))).thenThrow(NullPointerException.class);
         GraphQLApiConfig config = getGraphQLApiConfigWithNoEmptyFields();
 
-        CallStatus<String> result = classUnderTest.putGraphQlApiConfig(config);
-
-        assertThat(result.getStatus()).isEqualTo(Status.FAILED);
-        assertThat(result.getThrowable()).isInstanceOf(NullPointerException.class);
-        assertThat(result.getCalledObject()).isNull();
+        assertThrows(NullPointerException.class, () -> classUnderTest.putGraphQlApiConfig(config));
     }
 
     @Test
-    void test_putGraphQlApiConfig_and_thrown_exception_by_GitHubMapperService_returns_failed_callStatus() throws JsonProcessingException {
+    void test_putGraphQlApiConfig_passes_exception_when_mapperService_throws_exception() throws JsonProcessingException {
         when(mapperService.extractGitHubFileRequestFrom(any(GraphQLApiConfig.class))).thenThrow(NullPointerException.class);
         GraphQLApiConfig config = getGraphQLApiConfigWithNoEmptyFields();
 
-        CallStatus<String> result = classUnderTest.putGraphQlApiConfig(config);
-
-        assertThat(result.getStatus()).isEqualTo(Status.FAILED);
-        assertThat(result.getThrowable()).isInstanceOf(NullPointerException.class);
-        assertThat(result.getCalledObject()).isNull();
+        assertThrows(NullPointerException.class, () -> classUnderTest.putGraphQlApiConfig(config));
     }
 
     @Test
-    void test_putGraphQlApiConfig_and_thrown_exception_by_CallService_put_returns_failed_callStatus() throws JsonProcessingException {
+    void test_putGraphQlApiConfig_passes_exception_when_callService_throws_exception() {
         when(callService.put(anyString(), any(HttpEntity.class))).thenThrow(NullPointerException.class);
         GraphQLApiConfig config = getGraphQLApiConfigWithNoEmptyFields();
 
-        CallStatus<String> result = classUnderTest.putGraphQlApiConfig(config);
-
-        assertThat(result.getStatus()).isEqualTo(Status.FAILED);
-        assertThat(result.getThrowable()).isInstanceOf(NullPointerException.class);
-        assertThat(result.getCalledObject()).isNull();
+        assertThrows(NullPointerException.class, () -> classUnderTest.putGraphQlApiConfig(config));
     }
 
     @Test
-    void test_putGraphQlApiConfig_and_thrown_exception_by_CallService_get_returns_failed_callStatus() throws JsonProcessingException {
-        when(callService.get(anyString(), any(HttpEntity.class))).thenThrow(NullPointerException.class);
-        GraphQLApiConfig config = getGraphQLApiConfigWithNoEmptyFields();
-
-        CallStatus<String> result = classUnderTest.putGraphQlApiConfig(config);
-
-        assertThat(result.getStatus()).isEqualTo(Status.FAILED);
-        assertThat(result.getThrowable()).isInstanceOf(NullPointerException.class);
-        assertThat(result.getCalledObject()).isNull();
-    }
-
-    @Test
-    void test_putGraphQlApiConfig_with_null_GraphQlApiConfig_returns_failed_callStatus() throws JsonProcessingException {
-        CallStatus<String> result = classUnderTest.putGraphQlApiConfig(null);
-
-        assertThat(result.getStatus()).isEqualTo(Status.FAILED);
-        assertThat(result.getThrowable()).isInstanceOf(NullPointerException.class);
-        assertThat(result.getCalledObject()).isNull();
+    void test_putGraphQlApiConfig_with_GraphQlApiConfig_as_null_throws_exception() {
+        assertThrows(NullPointerException.class, () -> classUnderTest.putGraphQlApiConfig(null));
     }
 }

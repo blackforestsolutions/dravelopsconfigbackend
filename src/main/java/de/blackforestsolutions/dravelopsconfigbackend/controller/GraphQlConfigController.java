@@ -1,33 +1,36 @@
 package de.blackforestsolutions.dravelopsconfigbackend.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import de.blackforestsolutions.dravelopsconfigbackend.service.communicationservice.GitHubApiService;
+import de.blackforestsolutions.dravelopsconfigbackend.service.communicationservice.GraphQlConfigIntegrationService;
 import de.blackforestsolutions.dravelopsdatamodel.CallStatus;
+import de.blackforestsolutions.dravelopsdatamodel.GraphQlTab;
 import de.blackforestsolutions.dravelopsgeneratedcontent.graphql.GraphQLApiConfig;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("configbackend")
 public class GraphQlConfigController {
 
-    private final GitHubApiService apiService;
+    private final GraphQlConfigIntegrationService configIntegrationService;
 
     @Autowired
-    public GraphQlConfigController(GitHubApiService apiService) {
-        this.apiService = apiService;
+    public GraphQlConfigController(GraphQlConfigIntegrationService configIntegrationService) {
+        this.configIntegrationService = configIntegrationService;
     }
 
     @GetMapping
-    public CallStatus<GraphQLApiConfig> get() {
-        return apiService.getGraphQlApiConfig();
+    public ResponseEntity<GraphQLApiConfig> getGraphQlApiConfig() {
+        return configIntegrationService.getGraphQlApiConfig();
     }
 
     @PutMapping
-    public CallStatus<String> put(GraphQLApiConfig apiConfig) throws JsonProcessingException {
-        return apiService.putGraphQlApiConfig(apiConfig);
+    public ResponseEntity<List<CallStatus<GraphQlTab>>> putGraphQlApiConfig(GraphQLApiConfig apiConfig) {
+        return configIntegrationService.putGraphQlApiConfig(apiConfig);
     }
 }

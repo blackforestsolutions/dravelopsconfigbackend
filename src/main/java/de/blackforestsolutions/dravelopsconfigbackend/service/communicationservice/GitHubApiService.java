@@ -1,11 +1,11 @@
 package de.blackforestsolutions.dravelopsconfigbackend.service.communicationservice;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import de.blackforestsolutions.dravelopsdatamodel.CallStatus;
 import de.blackforestsolutions.dravelopsgeneratedcontent.graphql.GraphQLApiConfig;
 
-public interface GitHubApiService {
-    CallStatus<GraphQLApiConfig> getGraphQlApiConfig();
+import java.io.IOException;
 
-    CallStatus<String> putGraphQlApiConfig(GraphQLApiConfig graphQLApiConfig) throws JsonProcessingException;
+public interface GitHubApiService {
+    GraphQLApiConfig getGraphQlApiConfig() throws IOException;
+
+    void putGraphQlApiConfig(GraphQLApiConfig graphQLApiConfig) throws IOException;
 }
