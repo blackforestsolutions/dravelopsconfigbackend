@@ -83,7 +83,7 @@ public class GraphQlConfigIntegrationServiceImpl implements GraphQlConfigIntegra
                     .map(Optional::get)
                     .collect(Collectors.toList());
 
-            if (! tabList.isEmpty()) {
+            if (!tabList.isEmpty()) {
                 tabList.forEach(entry -> map.put(entry.getKey(), entry.getValue()));
                 graphQLApiConfig.getGraphql().getPlayground().setTabs(map);
                 putGraphQlApiConfig(graphQLApiConfig);
@@ -99,7 +99,7 @@ public class GraphQlConfigIntegrationServiceImpl implements GraphQlConfigIntegra
 
     private Optional<Map.Entry<String, Tab>> handleMapEntry(Map.Entry<String, Tab> entry) {
         ZonedDateTime zoneDateTime = ZonedDateTime.parse(entry.getValue().getVariables().getDateTime());
-        if (! zoneDateTime.isBefore(ZonedDateTime.now())) {
+        if (!zoneDateTime.isBefore(ZonedDateTime.now())) {
             return Optional.empty();
         }
         zoneDateTime = LocalDate.now().plusDays(1L).atTime(zoneDateTime.toLocalTime()).atZone(zoneDateTime.getZone());
