@@ -43,6 +43,4 @@ public class RefreshConfigServiceTest {
 
         assertThrows(RefreshExecutionException.class, classUnderTest::refreshConfigs);
     }
-
-
 }

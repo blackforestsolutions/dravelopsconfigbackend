@@ -14,6 +14,7 @@ public class TabObjectMother {
     private static final String DEFAULT_ARRIVAL_PLACEHOLDER = "Ziel";
     private static final String DEFAULT_DEPARTURE_PLACEHOLDER = "Start";
     private static final List<String> DEFAULT_LAYERS = List.of("venue", "address", "street", "locality");
+    private static final long DEFAULT_MAX_PAST_DAYS_IN_CALENDAR = 0L;
 
     public static Map<String, Tab> getTabsWithNoEmptyField() {
         Map<String, Tab> tabMap = new LinkedHashMap<>();
@@ -37,7 +38,7 @@ public class TabObjectMother {
         tab.setMaxResults(5L);
         tab.setDeparturePlaceholder(DEFAULT_DEPARTURE_PLACEHOLDER);
         tab.setArrivalPlaceholder(DEFAULT_ARRIVAL_PLACEHOLDER);
-        tab.setMaxPastDaysInCalendar(0L);
+        tab.setMaxPastDaysInCalendar(DEFAULT_MAX_PAST_DAYS_IN_CALENDAR);
         tab.setVariables(getJourneyVariables());
 
         return tab;
@@ -51,7 +52,7 @@ public class TabObjectMother {
         tab.setMaxResults(5L);
         tab.setDeparturePlaceholder(DEFAULT_DEPARTURE_PLACEHOLDER);
         tab.setArrivalPlaceholder(DEFAULT_ARRIVAL_PLACEHOLDER);
-        tab.setMaxPastDaysInCalendar(0L);
+        tab.setMaxPastDaysInCalendar(DEFAULT_MAX_PAST_DAYS_IN_CALENDAR);
         tab.setVariables(getJourneyVariables());
 
         return tab;
