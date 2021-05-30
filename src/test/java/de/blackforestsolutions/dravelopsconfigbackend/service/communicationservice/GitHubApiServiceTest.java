@@ -23,6 +23,7 @@ import org.springframework.http.ResponseEntity;
 
 import java.io.IOException;
 
+import static de.blackforestsolutions.dravelopsconfigbackend.configuration.TestConfiguration.*;
 import static de.blackforestsolutions.dravelopsconfigbackend.objectmothers.GraphQLApiConfigObjectMother.getGraphQLApiConfigWithNoEmptyFields;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
@@ -40,10 +41,10 @@ public class GitHubApiServiceTest{
     void init() throws IOException {
         when(callBuilderService.buildGitHubHttpHeaderWith(any(ApiToken.class))).thenReturn(new HttpHeaders());
 
-        String mappedResponseString = TestUtils.getResourceFileAsString("json/gitHubFileResponse.json");
+        String mappedResponseString = TestUtils.getResourceFileAsString(GITHUB_FILE_RESPONSE_JSON_PATH);
         when(callService.get(anyString(), any(HttpEntity.class))).thenReturn(new ResponseEntity<>(mappedResponseString, HttpStatus.OK));
 
-        String mappedRequestString = TestUtils.getResourceFileAsString("json/gitHubFileRequest.json");
+        String mappedRequestString = TestUtils.getResourceFileAsString(GITHUB_FILE_REQUEST_JSON_PATH);
         when(callService.put(anyString(), any(HttpEntity.class))).thenReturn(new ResponseEntity<>(mappedRequestString, HttpStatus.OK));
 
         when(callBuilderService.buildGitHubPathWith(any(ApiToken.class))).thenReturn("");
@@ -77,9 +78,9 @@ public class GitHubApiServiceTest{
         order.verify(mapperService, times(1)).extractGraphQlApiConfigFrom(jsonBodyArg.capture());
         order.verifyNoMoreInteractions();
         assertThat(tokenArg.getValue()).isEqualToComparingFieldByFieldRecursively(ApiTokenObjectMother.getCorrectApiToken());
-        assertThat(urlArg.getValue()).isEqualTo("https://api.github.com");
+        assertThat(urlArg.getValue()).isEqualTo(GITHUB_HOST_PATH);
         assertThat(httpEntityArg.getValue()).isEqualToComparingFieldByFieldRecursively(new HttpEntity<>(new HttpHeaders()));
-        assertThat(jsonBodyArg.getValue()).isEqualTo(TestUtils.getResourceFileAsString("json/gitHubFileResponse.json"));
+        assertThat(jsonBodyArg.getValue()).isEqualTo(TestUtils.getResourceFileAsString(GITHUB_FILE_RESPONSE_JSON_PATH));
     }
 
     @Test
@@ -146,10 +147,10 @@ public class GitHubApiServiceTest{
         order.verify(callService, times(1)).put(urlArg.capture(), httpEntityArg.capture());
         order.verifyNoMoreInteractions();
         assertThat(tokenArg.getValue()).isEqualToComparingFieldByFieldRecursively(ApiTokenObjectMother.getCorrectApiToken());
-        assertThat(urlArg.getValue()).isEqualTo("https://api.github.com");
+        assertThat(urlArg.getValue()).isEqualTo(GITHUB_HOST_PATH);
         assertThat(httpEntityArg.getValue()).isEqualToComparingFieldByFieldRecursively(
                 new HttpEntity<>(GitHubFileRequestObjectMother.getCorrectGitHubFileRequest(), new HttpHeaders()));
-        assertThat(jsonBodyArg.getValue()).isEqualTo(TestUtils.getResourceFileAsString("json/gitHubFileResponse.json"));
+        assertThat(jsonBodyArg.getValue()).isEqualTo(TestUtils.getResourceFileAsString(GITHUB_FILE_RESPONSE_JSON_PATH));
     }
 
     @Test

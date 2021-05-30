@@ -40,11 +40,12 @@ class GitHubHttpCallBuilderServiceTest{
     @Test
     void test_buildGitHubHttpHeaderWith_correct_apiToken_returns_correct_http_header() {
         ApiToken apiToken = getCorrectApiToken();
-
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add(HttpHeaders.AUTHORIZATION, apiToken.getPassword());
 
-        assertThat(httpHeaders).isEqualTo(classUnderTest.buildGitHubHttpHeaderWith(apiToken));
+        HttpHeaders result = classUnderTest.buildGitHubHttpHeaderWith(apiToken);
+
+        assertThat(httpHeaders).isEqualTo(result);
     }
 
     @Test

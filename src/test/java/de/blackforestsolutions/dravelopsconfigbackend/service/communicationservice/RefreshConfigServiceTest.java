@@ -24,25 +24,23 @@ public class RefreshConfigServiceTest {
 
     @Test
     void test_refreshConfigs_is_executed_correctly() {
-        when(callService.put(anyString(), any(HttpEntity.class)))
+        when(callService.post(anyString(), any(HttpEntity.class)))
                 .thenReturn(new ResponseEntity<>(HttpStatus.NO_CONTENT));
         ArgumentCaptor<String> urlArg = ArgumentCaptor.forClass(String.class);
         ArgumentCaptor<HttpEntity> httpEntityArg = ArgumentCaptor.forClass(HttpEntity.class);
 
         classUnderTest.refreshConfigs();
 
-        verify(callService, times(1)).put(urlArg.capture(), httpEntityArg.capture());
+        verify(callService, times(1)).post(urlArg.capture(), httpEntityArg.capture());
         assertThat(urlArg.getValue()).isEqualTo("http://localhost:8092/actuator/bus-refresh");
         assertThat(httpEntityArg.getValue()).isEqualTo(HttpEntity.EMPTY);
     }
 
     @Test
     void test_refreshConfigs_throws_exception_when_httpStatus_is_not_correct() {
-        when(callService.put(anyString(), any(HttpEntity.class)))
+        when(callService.post(anyString(), any(HttpEntity.class)))
                 .thenReturn(new ResponseEntity<>(HttpStatus.NOT_FOUND));
 
         assertThrows(RefreshExecutionException.class, classUnderTest::refreshConfigs);
     }
-
-
 }
