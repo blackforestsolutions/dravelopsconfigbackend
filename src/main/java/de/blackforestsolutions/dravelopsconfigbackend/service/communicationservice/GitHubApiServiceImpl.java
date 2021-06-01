@@ -4,8 +4,6 @@ import de.blackforestsolutions.dravelopsconfigbackend.service.communicationservi
 import de.blackforestsolutions.dravelopsconfigbackend.service.mapperservice.GitHubMapperService;
 import de.blackforestsolutions.dravelopsconfigbackend.service.supportservice.GitHubHttpCallBuilderService;
 import de.blackforestsolutions.dravelopsdatamodel.ApiToken;
-import de.blackforestsolutions.dravelopsdatamodel.CallStatus;
-import de.blackforestsolutions.dravelopsdatamodel.Status;
 import de.blackforestsolutions.dravelopsgeneratedcontent.github.GitHubFileRequest;
 import de.blackforestsolutions.dravelopsgeneratedcontent.graphql.GraphQLApiConfig;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +11,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.net.URL;
 
 import static de.blackforestsolutions.dravelopsdatamodel.util.DravelOpsHttpCallBuilder.buildUrlWith;
@@ -37,30 +36,20 @@ public class GitHubApiServiceImpl implements GitHubApiService {
     }
 
     @Override
-    public CallStatus<GraphQLApiConfig> getGraphQlApiConfig() {
-        try {
-            ResponseEntity<String> getResponse = buildAndExecuteCall();
-            GraphQLApiConfig apiConfig = gitHubMapperService.extractGraphQlApiConfigFrom(getResponse.getBody());
-            return new CallStatus<>(apiConfig, Status.SUCCESS, null);
-        } catch (Exception e) {
-            return new CallStatus<>(null, Status.FAILED, e);
-        }
+    public GraphQLApiConfig getGraphQlApiConfig() throws IOException {
+        ResponseEntity<String> getResponse = buildAndExecuteCall();
+        return gitHubMapperService.extractGraphQlApiConfigFrom(getResponse.getBody());
     }
 
     @Override
-    public CallStatus<String> putGraphQlApiConfig(GraphQLApiConfig graphQLApiConfig) {
-        try {
-            GitHubFileRequest gitHubFileRequest = gitHubMapperService.extractGitHubFileRequestFrom(graphQLApiConfig);
+    public void putGraphQlApiConfig(GraphQLApiConfig graphQLApiConfig) throws IOException {
+        GitHubFileRequest gitHubFileRequest = gitHubMapperService.extractGitHubFileRequestFrom(graphQLApiConfig);
 
-            ResponseEntity<String> getResponse = buildAndExecuteCall();
-            GraphQLApiConfig apiConfig = gitHubMapperService.extractGraphQlApiConfigFrom(getResponse.getBody());
-            gitHubFileRequest.setSha(apiConfig.getSha());
+        ResponseEntity<String> getResponse = buildAndExecuteCall();
+        GraphQLApiConfig apiConfig = gitHubMapperService.extractGraphQlApiConfigFrom(getResponse.getBody());
+        gitHubFileRequest.setSha(apiConfig.getSha());
 
-            ResponseEntity<String> putResponse = buildAndExecuteCall(gitHubFileRequest);
-            return new CallStatus<>(putResponse.getBody(), Status.SUCCESS, null);
-        } catch (Exception e) {
-            return new CallStatus<>(null, Status.FAILED, e);
-        }
+        buildAndExecuteCall(gitHubFileRequest);
     }
 
     private ResponseEntity<String> buildAndExecuteCall() {
@@ -68,9 +57,9 @@ public class GitHubApiServiceImpl implements GitHubApiService {
         return callService.get(getGitHubRequestUrl(), httpEntity);
     }
 
-    private ResponseEntity<String> buildAndExecuteCall(GitHubFileRequest fileRequest) {
+    private void buildAndExecuteCall(GitHubFileRequest fileRequest) {
         HttpEntity<GitHubFileRequest> httpEntity = new HttpEntity<>(fileRequest, callBuilderService.buildGitHubHttpHeaderWith(gitHubConfigApiToken));
-        return callService.put(getGitHubRequestUrl(), httpEntity);
+        callService.put(getGitHubRequestUrl(), httpEntity);
     }
 
     private String getGitHubRequestUrl() {
