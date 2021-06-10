@@ -59,10 +59,7 @@ public class GitHubMapperServiceImpl implements GitHubMapperService {
         GraphQLApiConfig graphQLApiConfig = mapper.readValue(yamlBytes, GraphQLApiConfig.class);
         graphQLApiConfig.setSha(shaId);
 
-        String name = graphQLApiConfig.getGraphql().getPlayground().getTabs().get(JOURNEY_SUBSCRIPTION.toString()).getName();
-        Tab tab = new Tab();
-        tab.setName(name);
-        graphQLApiConfig.getGraphql().getPlayground().getTabs().put(JOURNEY_SUBSCRIPTION.toString(), tab);
+        initJourneySubscriptionTab(graphQLApiConfig);
 
         return graphQLApiConfig;
     }
@@ -75,6 +72,13 @@ public class GitHubMapperServiceImpl implements GitHubMapperService {
 
         return Base64.getMimeEncoder(LINE_LENGTH, LINE_SEPARATOR.getBytes(StandardCharsets.UTF_8))
                 .encodeToString(yamlString.getBytes(StandardCharsets.UTF_8));
+    }
+
+    private void initJourneySubscriptionTab(GraphQLApiConfig graphQLApiConfig) {
+        String journeySubscriptionName = graphQLApiConfig.getGraphql().getPlayground().getTabs().get(JOURNEY_SUBSCRIPTION.toString()).getName();
+        Tab tab = new Tab();
+        tab.setName(journeySubscriptionName);
+        graphQLApiConfig.getGraphql().getPlayground().getTabs().put(JOURNEY_SUBSCRIPTION.toString(), tab);
     }
 
     private GraphQLApiConfig initJourneySubscriptionValues(GraphQLApiConfig graphQLApiConfig) {

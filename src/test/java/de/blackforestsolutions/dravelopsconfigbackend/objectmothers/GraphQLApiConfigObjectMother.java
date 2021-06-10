@@ -1,10 +1,9 @@
 package de.blackforestsolutions.dravelopsconfigbackend.objectmothers;
 
 import de.blackforestsolutions.dravelopsgeneratedcontent.graphql.GraphQLApiConfig;
-import de.blackforestsolutions.dravelopsgeneratedcontent.graphql.Tab;
 
+import static de.blackforestsolutions.dravelopsconfigbackend.objectmothers.GraphQlObjectMother.getGraphQlWithMissingJourneySubscription;
 import static de.blackforestsolutions.dravelopsconfigbackend.objectmothers.GraphQlObjectMother.getGraphQlWithNoEmptyFields;
-import static de.blackforestsolutions.dravelopsdatamodel.GraphQlTab.JOURNEY_SUBSCRIPTION;
 
 public class GraphQLApiConfigObjectMother {
 
@@ -19,13 +18,10 @@ public class GraphQLApiConfigObjectMother {
         return config;
     }
 
-    public static GraphQLApiConfig getGraphQLApiConfigWithMissingJourneySubscriptionTabExceptName() {
+    public static GraphQLApiConfig getGraphQLApiConfigWithEmptyJourneySubscriptionTab() {
         GraphQLApiConfig config = new GraphQLApiConfig();
 
-        config.setGraphql(getGraphQlWithNoEmptyFields());
-        Tab tab = new Tab();
-        tab.setName(config.getGraphql().getPlayground().getTabs().get(JOURNEY_SUBSCRIPTION.toString()).getName());
-        config.getGraphql().getPlayground().getTabs().put(JOURNEY_SUBSCRIPTION.toString(), tab);
+        config.setGraphql(getGraphQlWithMissingJourneySubscription());
         config.setSha(SHA);
 
         return config;

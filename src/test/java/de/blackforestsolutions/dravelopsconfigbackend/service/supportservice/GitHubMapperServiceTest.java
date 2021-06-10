@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
 import java.io.IOException;
 
 import static de.blackforestsolutions.dravelopsconfigbackend.objectmothers.GitHubFileRequestObjectMother.getCorrectGitHubFileRequest;
-import static de.blackforestsolutions.dravelopsconfigbackend.objectmothers.GraphQLApiConfigObjectMother.getGraphQLApiConfigWithMissingJourneySubscriptionTabExceptName;
+import static de.blackforestsolutions.dravelopsconfigbackend.objectmothers.GraphQLApiConfigObjectMother.getGraphQLApiConfigWithEmptyJourneySubscriptionTab;
 import static de.blackforestsolutions.dravelopsconfigbackend.objectmothers.GraphQLApiConfigObjectMother.getGraphQLApiConfigWithNoEmptyFields;
 import static de.blackforestsolutions.dravelopsdatamodel.testutil.TestUtils.getResourceFileAsString;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -25,7 +25,7 @@ public class GitHubMapperServiceTest {
 
         GraphQLApiConfig result = classUnderTest.extractGraphQlApiConfigFrom(testJson);
 
-        assertThat(result).isEqualToComparingFieldByFieldRecursively(getGraphQLApiConfigWithMissingJourneySubscriptionTabExceptName());
+        assertThat(result).isEqualToComparingFieldByFieldRecursively(getGraphQLApiConfigWithEmptyJourneySubscriptionTab());
     }
 
     @Test
@@ -44,6 +44,6 @@ public class GitHubMapperServiceTest {
         GitHubFileRequest mappedRequest = classUnderTest.extractGitHubFileRequestFrom(testApiConfig);
         GraphQLApiConfig result = classUnderTest.extractGraphQlApiConfigFrom(new DravelOpsJsonMapper().writeValueAsString(mappedRequest));
 
-        assertThat(result).isEqualToComparingFieldByFieldRecursively(getGraphQLApiConfigWithMissingJourneySubscriptionTabExceptName());
+        assertThat(result).isEqualToComparingFieldByFieldRecursively(getGraphQLApiConfigWithEmptyJourneySubscriptionTab());
     }
 }
