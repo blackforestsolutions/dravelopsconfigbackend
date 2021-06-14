@@ -30,6 +30,28 @@ public class TabObjectMother {
         return tabMap;
     }
 
+    public static Map<String, Tab> getTabsWithEmptyJourneySubscription() {
+        Map<String, Tab> tabMap = new LinkedHashMap<>();
+
+        tabMap.put(GraphQlTab.JOURNEY_QUERY.toString(), getTabJourneyQuery());
+        tabMap.put(GraphQlTab.JOURNEY_SUBSCRIPTION.toString(), getTabEmptyJourneySubscription());
+        tabMap.put(GraphQlTab.ADDRESS_AUTOCOMPLETION.toString(), getTabAutocompleteAddressesQuery());
+        tabMap.put(GraphQlTab.NEAREST_ADDRESSES.toString(), getTabNearestAddressesQuery());
+        tabMap.put(GraphQlTab.NEAREST_STATIONS.toString(), getTabNearestStationsQuery());
+        tabMap.put(GraphQlTab.ALL_STATIONS.toString(), getTabGetAllStationsQueryWithoutVariables());
+        tabMap.put(GraphQlTab.OPERATING_AREA.toString(), getTabGetOperatingAreaQuery());
+
+        return tabMap;
+    }
+
+    public static Tab getTabEmptyJourneySubscription() {
+        Tab tab = new Tab();
+
+        tab.setName("Journey subscription");
+
+        return tab;
+    }
+
     public static Tab getTabJourneyQuery() {
         Tab tab = new Tab();
 

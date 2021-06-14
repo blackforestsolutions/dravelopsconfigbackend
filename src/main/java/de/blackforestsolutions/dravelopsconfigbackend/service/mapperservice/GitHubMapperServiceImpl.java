@@ -15,8 +15,13 @@ import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.Base64;
 
+import static de.blackforestsolutions.dravelopsdatamodel.GraphQlTab.JOURNEY_QUERY;
+import static de.blackforestsolutions.dravelopsdatamodel.GraphQlTab.JOURNEY_SUBSCRIPTION;
+
 @Service
 public class GitHubMapperServiceImpl implements GitHubMapperService {
+
+    private static final String JOURNEY_SUBSCRIPTION_QUERY = "classpath:playground/requests/get-journeys-subscription-max-parameters.graphql";
 
     private static final String BACKEND_UPDATE = "Backend Update: ";
     private static final int LINE_LENGTH = 60;
@@ -36,13 +41,14 @@ public class GitHubMapperServiceImpl implements GitHubMapperService {
 
         gitHubFileRequest.setSha(graphQLApiConfig.getSha());
         gitHubFileRequest.setMessage(BACKEND_UPDATE.concat(LocalDateTime.now().toString()));
-        gitHubFileRequest.setContent(extractBase64From(graphQLApiConfig) + LINE_SEPARATOR);
+        gitHubFileRequest.setContent(extractBase64From(initJourneySubscriptionValues(graphQLApiConfig)) + LINE_SEPARATOR);
 
         return gitHubFileRequest;
     }
 
     private GraphQLApiConfig extractGitHubFileRequestFrom(GitHubFileResponse gitHubFileResponse) throws IOException {
         byte[] yamlBytes = Base64.getMimeDecoder().decode(gitHubFileResponse.getContent());
+
         return extractGraphQLApiConfigFrom(yamlBytes, gitHubFileResponse.getSha());
     }
 
@@ -52,6 +58,9 @@ public class GitHubMapperServiceImpl implements GitHubMapperService {
 
         GraphQLApiConfig graphQLApiConfig = mapper.readValue(yamlBytes, GraphQLApiConfig.class);
         graphQLApiConfig.setSha(shaId);
+
+        initJourneySubscriptionTab(graphQLApiConfig);
+
         return graphQLApiConfig;
     }
 
@@ -60,7 +69,31 @@ public class GitHubMapperServiceImpl implements GitHubMapperService {
         mapper.addMixIn(Tab.class, LayersMixIn.class);
 
         String yamlString = mapper.writeValueAsString(graphQLApiConfig);
+
         return Base64.getMimeEncoder(LINE_LENGTH, LINE_SEPARATOR.getBytes(StandardCharsets.UTF_8))
                 .encodeToString(yamlString.getBytes(StandardCharsets.UTF_8));
+    }
+
+    private void initJourneySubscriptionTab(GraphQLApiConfig graphQLApiConfig) {
+        String journeySubscriptionName = graphQLApiConfig.getGraphql().getPlayground().getTabs().get(JOURNEY_SUBSCRIPTION.toString()).getName();
+        Tab tab = new Tab();
+        tab.setName(journeySubscriptionName);
+        graphQLApiConfig.getGraphql().getPlayground().getTabs().put(JOURNEY_SUBSCRIPTION.toString(), tab);
+    }
+
+    private GraphQLApiConfig initJourneySubscriptionValues(GraphQLApiConfig graphQLApiConfig) {
+        Tab journeySubscriptionTab = graphQLApiConfig.getGraphql().getPlayground().getTabs().get(JOURNEY_SUBSCRIPTION.toString());
+        Tab journeyQueryTab = graphQLApiConfig.getGraphql().getPlayground().getTabs().get(JOURNEY_QUERY.toString());
+
+        journeySubscriptionTab.setQuery(JOURNEY_SUBSCRIPTION_QUERY);
+        journeySubscriptionTab.setArrivalPlaceholder(journeyQueryTab.getArrivalPlaceholder());
+        journeySubscriptionTab.setLayers(journeyQueryTab.getLayers());
+        journeySubscriptionTab.setBufferInMetres(journeyQueryTab.getBufferInMetres());
+        journeySubscriptionTab.setDeparturePlaceholder(journeyQueryTab.getDeparturePlaceholder());
+        journeySubscriptionTab.setMaxPastDaysInCalendar(journeyQueryTab.getMaxPastDaysInCalendar());
+        journeySubscriptionTab.setMaxResults(journeyQueryTab.getMaxResults());
+        journeySubscriptionTab.setVariables(journeyQueryTab.getVariables());
+
+        return graphQLApiConfig;
     }
 }
