@@ -4,16 +4,16 @@ import de.blackforestsolutions.dravelopsdatamodel.GraphQlTab;
 import de.blackforestsolutions.dravelopsgeneratedcontent.graphql.Tab;
 
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 
+import static de.blackforestsolutions.dravelopsconfigbackend.objectmothers.LayersObjectMother.getAddressAutocompletionQueryLayers;
+import static de.blackforestsolutions.dravelopsconfigbackend.objectmothers.LayersObjectMother.getNearestAddressesQueryLayers;
 import static de.blackforestsolutions.dravelopsconfigbackend.objectmothers.VariablesObjectMother.*;
 
 public class TabObjectMother {
 
     private static final String DEFAULT_ARRIVAL_PLACEHOLDER = "Ziel";
     private static final String DEFAULT_DEPARTURE_PLACEHOLDER = "Start";
-    private static final List<String> DEFAULT_LAYERS = List.of("venue", "address", "street", "locality");
     private static final long DEFAULT_MAX_PAST_DAYS_IN_CALENDAR = 0L;
 
     public static Map<String, Tab> getTabsWithNoEmptyField() {
@@ -86,7 +86,7 @@ public class TabObjectMother {
         tab.setName("Autocomplete addresses query");
         tab.setQuery("classpath:playground/requests/get-autocomplete-addresses-query-max-parameters.graphql");
         tab.setMaxResults(10L);
-        tab.setLayers(DEFAULT_LAYERS);
+        tab.setLayers(getAddressAutocompletionQueryLayers());
         tab.setVariables(getAddressAutocompletionQueryVariables());
 
         return tab;
@@ -98,7 +98,7 @@ public class TabObjectMother {
         tab.setName("Nearest addresses query");
         tab.setQuery("classpath:playground/requests/get-nearest-addresses-query-max-parameters.graphql");
         tab.setMaxResults(10L);
-        tab.setLayers(DEFAULT_LAYERS);
+        tab.setLayers(getNearestAddressesQueryLayers());
         tab.setVariables(getNearestAddressesQueryVariables());
 
         return tab;

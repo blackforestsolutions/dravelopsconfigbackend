@@ -2,7 +2,6 @@ package de.blackforestsolutions.dravelopsconfigbackend.service.mapperservice;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
-import de.blackforestsolutions.dravelopsconfigbackend.jackson.LayersMixIn;
 import de.blackforestsolutions.dravelopsdatamodel.util.DravelOpsJsonMapper;
 import de.blackforestsolutions.dravelopsgeneratedcontent.github.GitHubFileRequest;
 import de.blackforestsolutions.dravelopsgeneratedcontent.github.GitHubFileResponse;
@@ -54,7 +53,6 @@ public class GitHubMapperServiceImpl implements GitHubMapperService {
 
     private GraphQLApiConfig extractGraphQLApiConfigFrom(byte[] yamlBytes, String shaId) throws IOException {
         DravelOpsJsonMapper mapper = new DravelOpsJsonMapper(new YAMLFactory());
-        mapper.addMixIn(Tab.class, LayersMixIn.class);
 
         GraphQLApiConfig graphQLApiConfig = mapper.readValue(yamlBytes, GraphQLApiConfig.class);
         graphQLApiConfig.setSha(shaId);
@@ -66,7 +64,6 @@ public class GitHubMapperServiceImpl implements GitHubMapperService {
 
     private String extractBase64From(GraphQLApiConfig graphQLApiConfig) throws JsonProcessingException {
         DravelOpsJsonMapper mapper = new DravelOpsJsonMapper(new YAMLFactory());
-        mapper.addMixIn(Tab.class, LayersMixIn.class);
 
         String yamlString = mapper.writeValueAsString(graphQLApiConfig);
 
